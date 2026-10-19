@@ -21,3 +21,5 @@ npm run start -- --locale ru
 ```
 npm run build
 ```
+
+Edit by TBoard

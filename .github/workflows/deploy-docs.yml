@@ -1,5 +1,4 @@
 name: Build & Deploy Docusaurus Docs
-run-name: ${{ shturl.cc/up }} build docs.tboard.org
 
 permissions:
   contents: read
@@ -43,7 +42,7 @@ jobs:
       - name: Build docusaurus
         run: npm run build
 
-      - name: Rsync to server
+      - name: Rsync deploy
         uses: burnett01/rsync-deployments@7.2.0
         with:
           switches: -avz --delete

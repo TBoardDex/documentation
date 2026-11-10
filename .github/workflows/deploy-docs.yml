@@ -69,7 +69,6 @@ jobs:
         uses: burnett01/rsync-deployments@7.1.0
         with:
           switches: -avz --delete
-          # ✅ 这里改成 build/zh/，和你日志匹配！
           path: build/zh/
           remote_path: ${{ secrets.CN_WEB_PATH }}
           remote_host: ${{ secrets.CN_SSH_HOST }}

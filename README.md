@@ -167,8 +167,10 @@ deleting them.
 
 ## Deployment
 
-`.github/workflows/deploy-docs.yml` is the deployment contract and must not be
-modified. A push to `main` triggers:
+`.github/workflows/deploy-docs.yml` is the deployment contract. The owner edits
+it directly on GitHub (comments and Secrets), so keep the build and deploy logic
+itself unchanged — comment / whitespace edits are fine. A push to `main`
+triggers:
 
 ```
 npm ci -> npm run build

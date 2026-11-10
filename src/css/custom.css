@@ -491,6 +491,33 @@ html { scroll-behavior: smooth; }
   border-left: 3px solid var(--tb-cyan);
   color: var(--ifm-color-primary);
 }
+
+/* Platform chip in the docs sidebar: the colour encodes the Rockchip SoC so a
+   model reads together with its platform at a glance. One rule per platform;
+   add a new one when a board on a new SoC is published. */
+.menu__link .tb-plat {
+  display: inline-flex;
+  align-items: center;
+  height: 17px;
+  margin-right: 7px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .045em;
+  line-height: 1;
+  color: #fff;
+  background: var(--tb-navy-light);
+}
+.menu__link .tb-plat-model { font-weight: 700; }
+.tb-plat--rk3588s, .tb-plat--rk3588 { background: #0a4f93; }
+.tb-plat--rk3576 { background: #0f6e56; }
+.tb-plat--rk3568, .tb-plat--rk3566 { background: #8a5a12; }
+.tb-plat--rk3399 { background: #9c3a24; }
+[data-theme='dark'] .tb-plat--rk3588s, [data-theme='dark'] .tb-plat--rk3588 { background: #2f7fc4; }
+[data-theme='dark'] .tb-plat--rk3576 { background: #199d78; }
+[data-theme='dark'] .tb-plat--rk3568, [data-theme='dark'] .tb-plat--rk3566 { background: #b8791a; }
+[data-theme='dark'] .tb-plat--rk3399 { background: #c25336; }
 .table-of-contents {
   border-left: 1px solid var(--tb-border);
   padding-left: 14px; font-size: .84rem;

@@ -7,28 +7,37 @@ slug: "/download-firmware"
 
 # Download Firmware
 
-![TBoard placeholder image 800 x 450 px](/img/placeholder-800x450.png)
+![download page screenshot placeholder 800 x 450 px](/img/placeholder-800x450.png)
 
-> Image placeholder: **800 × 450 px** (suggested use: procedure screenshot). Replace it later
-> with a verified image of the same dimensions.
+> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
+> screenshot). Replace it later with a verified image of the same dimensions.
 
-> **DRAFT** — This page is a structural placeholder. Replace it with verified
-> TBoard content when it is ready.
+## Pick the right image
 
-## What belongs on this page
+All R5A images are published on the [Downloads](/downloads) page. Choose:
 
-Point to the Downloads hub, show how to pick the image that matches the R5A hardware revision, and how to verify checksums before flashing.
+1. **Board**: TBoard R5A.
+2. **OS**: Debian or Ubuntu image.
+3. **Target**: microSD/SD-card image or eMMC `update.img`.
+4. **Hardware revision**: match your board revision if several are listed.
 
+## Verify before flashing
 
-## Writing checklist
+Check the SHA-256 checksum of the downloaded file before writing it:
 
-- Use only TBoard-owned domains and download endpoints.
-- Keep board-specific parameters on the [TBoard R5A](/tboard-r5a) page.
-- Put images in `static/img/` and reference them as `/img/...`.
-- Avoid raw angle brackets in MDX; wrap placeholders such as `<SoC>` in backticks.
+```bash
+sha256sum tboard-r5a-debian.img.xz
+# compare with the value published next to the download link
+```
+
+## Image types at a glance
+
+| Type | Written with | Goes to |
+|---|---|---|
+| SD-card image | balenaEtcher / Rufus / `dd` | microSD card |
+| `update.img` | RKDevTool (Windows) or upgrade_tool (Linux) | eMMC |
 
 ## Related
 
-- [Quick Start](/quick-start)
 - [Downloads](/downloads)
-- [Forum](https://forum.tboard.org)
+- [Flashing the Image](/flashing) — next step.

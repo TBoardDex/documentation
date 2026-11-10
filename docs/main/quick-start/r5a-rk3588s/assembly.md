@@ -7,28 +7,47 @@ slug: "/assembly"
 
 # Assembly & Connections
 
-![TBoard placeholder image 800 x 450 px](/img/placeholder-800x450.png)
+![assembly steps photo placeholder 800 x 450 px](/img/placeholder-800x450.png)
 
-> Image placeholder: **800 × 450 px** (suggested use: procedure screenshot). Replace it later
-> with a verified image of the same dimensions.
+> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
+> screenshot). Replace it later with a verified image of the same dimensions.
 
-> **DRAFT** — This page is a structural placeholder. Replace it with verified
-> TBoard content when it is ready.
+## 1. Install cooling
 
-## What belongs on this page
+Attach the heatsink to the SoC. For sustained loads also mount the fan — the
+RK3588S can exceed 60 °C without airflow. Keep the fins clear of the 40-pin
+header and camera/display ribbon connectors.
 
-Heatsink and fan mounting, power supply selection, serial console wiring, display and storage connections, and the pre-power-on checklist.
+## 2. Connect storage
 
+Insert the eMMC module into its slot, or a microSD card (Class 10, ≥ 8 GB) into
+the card slot. Note the boot order: **microSD first**, then eMMC.
 
-## Writing checklist
+## 3. Connect display
 
-- Use only TBoard-owned domains and download endpoints.
-- Keep board-specific parameters on the [TBoard R5A](/tboard-r5a) page.
-- Put images in `static/img/` and reference them as `/img/...`.
-- Avoid raw angle brackets in MDX; wrap placeholders such as `<SoC>` in backticks.
+- **HDMI**: Micro-HDMI → HDMI cable to the Micro HDMI port (up to 8Kp60).
+- **DP**: Mini DP to a DP monitor directly (4Kp60), or to HDMI with an
+  **active** converter only.
+- **MIPI DSI panel**: 15-pin FFC ribbon to the DSI connector, plus 5 V / GND
+  from 40-pin Pin 2 / Pin 6 — see [Display](/display).
+
+## 4. Network and peripherals
+
+- Ethernet: plug in an RJ45 cable (DHCP by default), or use the onboard
+  Wi-Fi 6 / Bluetooth 5.2.
+- Keyboard and mouse: any of the four USB-A ports (2× USB 3.0, 2× USB 2.0).
+- Debug console (optional): 3.3 V USB-to-serial adapter to Pin 8 (TX) /
+  Pin 10 (RX), GND on Pin 6 — see [UART & Serial](/uart-serial).
+
+## 5. Pre-power-on checklist
+
+- [ ] Cooling mounted, no loose parts on the board
+- [ ] Boot media inserted (card or eMMC)
+- [ ] Display connected (if you want local output)
+- [ ] 5 V / 3 A Type-C adapter at hand — the **PWR IN** port only, not the
+      USB 3.0 ports
 
 ## Related
 
-- [Quick Start](/quick-start)
-- [Downloads](/downloads)
-- [Forum](https://forum.tboard.org)
+- [Download Firmware](/download-firmware) — next step.
+- [TBoard R5A](/tboard-r5a) — connector map.

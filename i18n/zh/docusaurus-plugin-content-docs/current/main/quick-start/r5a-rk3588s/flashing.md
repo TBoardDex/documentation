@@ -1,32 +1,45 @@
 ---
-title: "镜像烧录"
-sidebar_label: "镜像烧录"
+title: "烧录镜像"
+sidebar_label: "Flashing"
 sidebar_position: 4
 slug: "/flashing"
 ---
 
-# 镜像烧录
+# 烧录镜像
 
-![TBoard placeholder image 800 x 450 px](/img/placeholder-800x450.png)
+![烧录流程截图占位图 800 x 450 px](/img/placeholder-800x450.png)
 
-> 图片占位：**800 × 450 px**（建议用途：实测操作截图）。后续请用同尺寸的真实图片替换。
+> 图片占位：**800 × 450 px**（建议用途：操作照片 / 截图）。后期请替换为
+> 相同尺寸的真实图片。
 
-> **草稿** —— 本页是结构化占位，内容准备好后请替换为经过验证的 TBoard 资料。
+有两条烧录路径，都从[资料下载](/downloads)页面获取校验过的镜像开始。
 
-## 本页应写什么
+## 方式一 — microSD 卡
 
-RKDevTool 与 upgrade_tool 流程：Maskrom / Loader 模式、驱动安装，以及把 update.img 烧录到 eMMC 或 SD 卡。
+1. 用 balenaEtcher、Rufus 或 `dd` 写入 SD 卡镜像：
 
+```bash
+xzcat tboard-r5a-debian.img.xz | sudo dd of=/dev/sdX bs=4M status=progress && sync
+```
 
-## 写作检查项
+2. 弹出卡后插入 R5A 卡槽并上电——板卡优先从 microSD 启动。
 
-- 只使用 TBoard 自有域名与下载地址。
-- 板卡专属参数统一写在 [TBoard R5A](/zh/tboard-r5a) 页面。
-- 图片放在 `static/img/`，用 `/img/...` 引用。
-- MDX 会解析尖括号，`<SoC>` 这类占位请放进反引号。
+## 方式二 — eMMC
+
+**进入烧录模式**（板卡断电，用 USB 双公头 A 对 A 线连接 PC 与板上 USB 3.0 口）：
+
+- **Loader 模式**：上电时把 Recovery 引脚与 GND 短接。
+- **Maskrom 模式**：上电时把 Maskrom 引脚与 GND 短接（eMMC 中已有损坏引导
+  程序时使用）。
+
+**Windows**：安装 Rockchip USB 驱动，打开 RKDevTool，切到 *升级固件* 页，按
+提示先擦除 Flash，加载 `update.img`，点击 *升级*。
+
+**Linux**：使用 `upgrade_tool`（或 `rkdeveloptool`）写入同一个 `update.img`。
+
+看到 *升级成功* 后再断开连接。
 
 ## 相关页面
 
-- [快速上手](/zh/quick-start)
-- [资料下载](/zh/downloads)
-- [论坛](https://forum.tboard.org)
+- [首次开机](/first-boot) — 下一步。
+- [USB](/usb) — 烧录应使用哪个接口。

@@ -1,32 +1,57 @@
 ---
 title: "基础编译"
-sidebar_label: "基础编译"
+sidebar_label: "Basic Compilation"
 sidebar_position: 6
 slug: "/basic-compile"
 ---
 
 # 基础编译
 
-![TBoard placeholder image 960 x 540 px](/img/placeholder-960x540.png)
+![交叉编译流程图占位图 960 x 540 px](/img/placeholder-960x540.png)
 
-> 图片占位：**960 × 540 px**（建议用途：构建或下载流程图）。后续请用同尺寸的真实图片替换。
+> 图片占位：**960 × 540 px**（建议用途：构建流程图）。后期请替换为
+> 相同尺寸的真实图片。
 
-> **草稿** —— 本页是结构化占位，内容准备好后请替换为经过验证的 TBoard 资料。
+在 PC 上交叉编译一个小程序并放到 R5A 上运行。SDK 源码与成品固件镜像见
+[资料下载](/downloads)页面。
 
-## 本页应写什么
+## 1. 安装工具链（PC）
 
-配置交叉工具链，为 R5A 编译一个简单示例程序；完整 SDK 构建请见 SDK 构建文档。
+```bash
+sudo apt install gcc-aarch64-linux-gnu
+```
 
+## 2. 编译测试程序（PC）
 
-## 写作检查项
+```c
+/* hello.c */
+#include <stdio.h>
+int main(void) { printf("Hello from TBoard R5A\n"); return 0; }
+```
 
-- 只使用 TBoard 自有域名与下载地址。
-- 板卡专属参数统一写在 [TBoard R5A](/zh/tboard-r5a) 页面。
-- 图片放在 `static/img/`，用 `/img/...` 引用。
-- MDX 会解析尖括号，`<SoC>` 这类占位请放进反引号。
+```bash
+aarch64-linux-gnu-gcc -o hello hello.c
+file hello     # 应显示 "ARM aarch64"
+```
+
+## 3. 拷贝并运行（板卡）
+
+```bash
+scp hello <user>@<board-ip>:/home/<user>/
+# 在板卡上：
+./hello
+```
+
+## 4. 查看运行时 CPU 状态
+
+8 核以三个 cpufreq policy 呈现（小核 / 大核簇）：
+
+```bash
+lscpu
+cat /sys/devices/system/cpu/cpufreq/policy*/scaling_cur_freq
+```
 
 ## 相关页面
 
-- [快速上手](/zh/quick-start)
-- [资料下载](/zh/downloads)
-- [论坛](https://forum.tboard.org)
+- [SDK 源码](/sdk-sources) — 完整 SDK 与固件源码。
+- [TBoard R5A](/tboard-r5a)

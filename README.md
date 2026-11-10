@@ -34,9 +34,13 @@ docs/main/
   main-page.md              landing page (slug: /) — Hero + path cards + showcase
   quick-start/              Quick Start / 快速上手           (position 1)
     r5a-rk3588s/            R5A (RK3588S) / R5A（RK3588S）   (6 pages)
-  boards/                   Boards / 开发板                 (position 2, 1 page)
+  boards/                   Boards / 开发板                 (position 2, per-board: overview + pinout)
+    r5a/                    R5A (RK3588S) / R5A（RK3588S）   (overview.md + pinout.md)
   downloads/                Downloads / 资料下载             (position 3, 5 pages)
-  common/                   Common / 通用                   (position 4, 1 page)
+  common/                   Common / 通用                   (position 4, platform-common only:
+                                                              overview + GPIO, UART, I2C, SPI, PWM,
+                                                              USB, Display, Camera, Audio — no
+                                                              board-specific pinouts here)
   system-sdk/               Accessories / 外围配件          (position 5, overview only)
   linux/                    Linux / Linux                   (position 6, 1 page)
   android/                  Android / Android               (position 7, 1 page)
@@ -74,9 +78,9 @@ Stable slugs used by the homepage, footer and quick-jump menu:
 | Flashing / first boot / basic compile | `/flashing` `/first-boot` `/basic-compile` |
 | Downloads hub | `/downloads` `/hardware-files` `/firmware-images` `/sdk-sources` `/tools` |
 | Accessories hub | `/accessories` |
-| R5A product page | `/tboard-r5a` |
+| R5A product page / pinout | `/tboard-r5a` `/r5a-pinout` |
 | Software / hardware licences | `/licenses/software` `/licenses/hardware` |
-| Common / Linux / Android / Others | `/common` `/linux` `/android` `/others` |
+| Common / Linux / Android / Others | `/common` `/gpio` `/linux` `/android` `/others` |
 
 Accessories and Others are intentionally single-page sections: each keeps only
 its own `/accessories` or `/others` overview, and device / system pages are

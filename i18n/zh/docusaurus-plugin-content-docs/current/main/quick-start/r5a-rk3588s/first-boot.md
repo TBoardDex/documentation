@@ -1,32 +1,55 @@
 ---
-title: "首次上电"
-sidebar_label: "首次上电"
+title: "首次开机"
+sidebar_label: "First Boot"
 sidebar_position: 5
 slug: "/first-boot"
 ---
 
-# 首次上电
+# 首次开机
 
-![TBoard placeholder image 800 x 450 px](/img/placeholder-800x450.png)
+![首次开机串口截图占位图 800 x 450 px](/img/placeholder-800x450.png)
 
-> 图片占位：**800 × 450 px**（建议用途：实测操作截图）。后续请用同尺寸的真实图片替换。
+> 图片占位：**800 × 450 px**（建议用途：操作照片 / 截图）。后期请替换为
+> 相同尺寸的真实图片。
 
-> **草稿** —— 本页是结构化占位，内容准备好后请替换为经过验证的 TBoard 资料。
+## 上电
 
-## 本页应写什么
+把 5 V / 3 A 适配器接到 **PWR IN** 的 Type-C 口。红色电源指示灯常亮表示供电
+正常；绿色用户指示灯默认熄灭，系统启动后可由软件控制。
 
-供电要求、串口控制台连接、启动日志解读与首次启动检查清单。
+板卡优先从 microSD 启动，其次 eMMC。首次启动会展开根文件系统，可能需要约
+一分钟。
 
+## 登录系统
 
-## 写作检查项
+**有显示器**：桌面会话自动启动。
 
-- 只使用 TBoard 自有域名与下载地址。
-- 板卡专属参数统一写在 [TBoard R5A](/zh/tboard-r5a) 页面。
-- 图片放在 `static/img/`，用 `/img/...` 引用。
-- MDX 会解析尖括号，`<SoC>` 这类占位请放进反引号。
+**用串口**（无显示器场景推荐）：3.3 V USB 转 TTL 接 Pin 8 / Pin 10，
+**1500000 波特率，8N1，无流控**：
+
+```bash
+sudo picocom -b 1500000 /dev/ttyUSB0
+```
+
+使用镜像发布说明中给出的默认账户登录（不同镜像默认账户不同；首次登录后请
+立即修改密码）。
+
+## 开机自检
+
+```bash
+uname -a                      # 内核版本
+ls /dev/video* /dev/i2c-*     # 接口节点是否可见
+ip a                          # 以太网是否拿到 DHCP 地址
+ping -c3 docs.tboard.org      # 外网连通性
+```
+
+## 无法启动时
+
+- 检查启动顺序——卡槽里的旧 microSD 会优先于 eMMC 启动。
+- 看串口是否有 U-Boot 输出；完全没有输出通常是供电或接线问题。
+- 重新烧录后再试——见[烧录镜像](/flashing)。
 
 ## 相关页面
 
-- [快速上手](/zh/quick-start)
-- [资料下载](/zh/downloads)
-- [论坛](https://forum.tboard.org)
+- [UART 与串口](/uart-serial)
+- [基础编译](/basic-compile) — 编译第一个程序。

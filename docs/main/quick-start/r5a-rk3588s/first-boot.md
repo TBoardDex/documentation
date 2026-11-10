@@ -7,28 +7,52 @@ slug: "/first-boot"
 
 # First Boot
 
-![TBoard placeholder image 800 x 450 px](/img/placeholder-800x450.png)
+![first boot serial console screenshot placeholder 800 x 450 px](/img/placeholder-800x450.png)
 
-> Image placeholder: **800 × 450 px** (suggested use: procedure screenshot). Replace it later
-> with a verified image of the same dimensions.
+> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
+> screenshot). Replace it later with a verified image of the same dimensions.
 
-> **DRAFT** — This page is a structural placeholder. Replace it with verified
-> TBoard content when it is ready.
+## Power on
 
-## What belongs on this page
+Connect the 5 V / 3 A adapter to the **PWR IN** Type-C port. The red power LED
+stays lit while power is present; the green user LED is off by default and can
+be controlled from software after boot.
 
-Power requirements, serial console setup, boot log reading and the first successful boot checklist.
+The board boots from microSD first, then eMMC. First boot may take a minute
+while the image expands its root filesystem.
 
+## Log in
 
-## Writing checklist
+**With a display**: the desktop session starts automatically.
 
-- Use only TBoard-owned domains and download endpoints.
-- Keep board-specific parameters on the [TBoard R5A](/tboard-r5a) page.
-- Put images in `static/img/` and reference them as `/img/...`.
-- Avoid raw angle brackets in MDX; wrap placeholders such as `<SoC>` in backticks.
+**With the serial console** (recommended for headless setups): 3.3 V
+USB-to-serial adapter on Pin 8 / Pin 10, **1500000 baud, 8N1, no flow control**:
+
+```bash
+sudo picocom -b 1500000 /dev/ttyUSB0
+```
+
+Log in with the default account published with your image release notes
+(credentials differ per image; change the password immediately after first
+login).
+
+## First-boot checks
+
+```bash
+uname -a                      # kernel version
+ls /dev/video* /dev/i2c-*     # interfaces visible
+ip a                          # Ethernet got a DHCP address
+ping -c3 docs.tboard.org      # outbound network
+```
+
+## If it does not boot
+
+- Re-check the boot order — an old microSD card wins over eMMC.
+- Watch the serial console for U-Boot output; no output usually means power or
+  cabling issues.
+- Re-flash and try again — see [Flashing the Image](/flashing).
 
 ## Related
 
-- [Quick Start](/quick-start)
-- [Downloads](/downloads)
-- [Forum](https://forum.tboard.org)
+- [UART & Serial](/uart-serial)
+- [Basic Compilation](/basic-compile) — build your first program.

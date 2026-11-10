@@ -19,10 +19,21 @@ const WWW_CHINA = 'https://www.tboard.cn';
 const FORUM_URL = 'https://forum.tboard.org';
 const ORG_URL = 'https://github.com/TBoardDex';
 
+// Docusaurus appends " | <site title>" to every page title. The landing page
+// therefore carries an empty doc title, so the browser tab shows the brand once
+// instead of "TBoard Documentation | TBoard Documentation". Site title, tagline
+// and navbar label are localised per build (docusaurus reloads this file for
+// each locale, so the env var below is the locale being built right now).
+const IS_ZH = process.env.DOCUSAURUS_CURRENT_LOCALE === 'zh';
+const SITE_TITLE = IS_ZH ? 'TBoard 文档' : 'TBoard Documentation';
+const SITE_TAGLINE = IS_ZH
+  ? 'RK3588 / RK3588S 开源硬件与软件文档'
+  : 'RK3588 / RK3588S open-source hardware and software documentation';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'TBoard Documentation',
-  tagline: 'RK3588 / RK3588S open-source hardware and software documentation',
+  title: SITE_TITLE,
+  tagline: SITE_TAGLINE,
   favicon: 'img/favicon.svg',
 
   url: EN_SITE_URL,
@@ -98,7 +109,7 @@ const config = {
         { name: 'keywords', content: 'TBoard, RK3588, RK3588S, Rockchip, SBC, open source hardware, SDK' },
       ],
       navbar: {
-        title: 'TBoard Docs',
+        title: IS_ZH ? 'TBoard 文档' : 'TBoard Docs',
         logo: { alt: 'TBoard', src: 'img/tboard-logo.png' },
         items: [
           { type: 'custom-quicknav', position: 'left' },
@@ -143,7 +154,7 @@ const config = {
             ],
           },
         ],
-        copyright: 'Copyright © ' + new Date().getFullYear() + ' Fuzhou Tianshu Technology. TBoard is a registered trademark.',
+        copyright: 'Copyright © ' + new Date().getFullYear() + ' TBoard. All rights reserved.',
       },
       prism: { theme: lightCodeTheme, darkTheme: darkCodeTheme },
     }),

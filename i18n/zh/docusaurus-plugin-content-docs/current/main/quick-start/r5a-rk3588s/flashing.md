@@ -1,6 +1,6 @@
 ---
 title: "烧录镜像"
-sidebar_label: "Flashing"
+sidebar_label: "烧录镜像"
 sidebar_position: 4
 slug: "/flashing"
 ---

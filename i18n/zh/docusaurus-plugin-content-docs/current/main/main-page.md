@@ -1,5 +1,5 @@
 ---
-title: "TBoard 文档"
+title: ""
 sidebar_label: "首页"
 sidebar_position: 0
 slug: /

@@ -1,6 +1,6 @@
 ---
 title: "下载固件"
-sidebar_label: "Download Firmware"
+sidebar_label: "下载固件"
 sidebar_position: 3
 slug: "/download-firmware"
 ---

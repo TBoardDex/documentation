@@ -1,6 +1,6 @@
 ---
 title: "组装与连接"
-sidebar_label: "Assembly"
+sidebar_label: "装配与接线"
 sidebar_position: 2
 slug: "/assembly"
 ---

@@ -12,8 +12,13 @@ const PATHS = [
   },
   {
     to: '/tboard-r5a', icon: 'M6 6h12v12H6zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4',
-    en: ['Boards', 'Board specifications, connectors, pinout and mechanical data.', '1 page'],
-    zh: ['开发板', '规格参数、板卡布局、连接器与机械尺寸。', '1 篇'],
+    en: ['Boards', 'Board specifications, connectors, pinout and mechanical data.', '2 pages'],
+    zh: ['开发板', '规格参数、板卡布局、连接器与引脚定义。', '2 篇'],
+  },
+  {
+    to: '/projects', icon: 'M4 20h16M6 20V9l6-4 6 4v11M10 20v-6h4v6',
+    en: ['Projects', 'End-to-end case studies built on TBoard boards.', '1 page'],
+    zh: ['项目案例', '基于 TBoard 板卡搭建的完整案例方案。', '1 篇'],
   },
   {
     to: '/downloads', icon: 'M12 3v12M7 10l5 5 5-5M4 20h16',
@@ -57,32 +62,36 @@ const QUICK_GROUPS = [
     en: 'Start here', zh: '从这里开始', icon: 'M4 5h7v14H4zM13 8h7M13 12h7',
     items: [
       { to: '/quick-start', en: ['R5A (RK3588S)', 'Board quick start'], zh: ['R5A（RK3588S）', '板卡快速上手'] },
+      { to: '/projects', en: ['Projects', 'Complete board-based solutions'], zh: ['项目案例', '基于板卡的完整方案'] },
       { to: '/downloads', en: ['Downloads', 'Images, SDK, design files'], zh: ['资料下载', '镜像、SDK、设计文件'] },
-      { to: '/flashing', en: ['Flash the Image', 'Maskrom / Loader workflow'], zh: ['镜像烧录', 'Maskrom / Loader 流程'] },
-      { to: '/first-boot', en: ['First Boot', 'Power, serial, boot log'], zh: ['首次上电', '供电、串口、启动日志'] },
+      { to: '/accessories', en: ['Accessories', 'Displays, cameras, cooling'], zh: ['外围配件', '屏幕、摄像头、散热'] },
     ],
   },
   {
-    en: 'Board & files', zh: '板卡与资料', icon: 'M6 6h12v12H6zM9 2v4M15 2v4M2 9h4M18 9h4',
+    en: 'Board & pins', zh: '板卡与引脚', icon: 'M6 6h12v12H6zM9 2v4M15 2v4M2 9h4M18 9h4',
     items: [
-      { to: '/tboard-r5a', en: ['R5A Board Specs', 'Connectors and pinout'], zh: ['R5A 板卡规格', '连接器与引脚定义'] },
+      { to: '/tboard-r5a', en: ['R5A Board Specs', 'Connectors and interfaces'], zh: ['R5A 板卡规格', '连接器与接口'] },
+      { to: '/r5a-pinout', en: ['40-PIN Pinout', 'Full pin definition table'], zh: ['40-PIN 引脚定义', '完整引脚定义表'] },
       { to: '/assembly', en: ['Assembly', 'Mounting and wiring'], zh: ['装配与接线', '安装与连线'] },
       { to: '/hardware-files', en: ['Hardware Files', 'Schematics and mechanical data'], zh: ['硬件资料', '原理图与结构图'] },
-      { to: '/firmware-images', en: ['Firmware Images', 'Factory and OS images'], zh: ['固件镜像', '工厂与系统镜像'] },
     ],
   },
   {
     en: 'Build & flash', zh: '构建与烧录', icon: 'M8 3v6M16 3v6M5 9h14v12H5z',
     items: [
+      { to: '/flashing', en: ['Flash the Image', 'Maskrom / Loader workflow'], zh: ['镜像烧录', 'Maskrom / Loader 流程'] },
+      { to: '/first-boot', en: ['First Boot', 'Power, serial, boot log'], zh: ['首次上电', '供电、串口、启动日志'] },
       { to: '/sdk-sources', en: ['SDK Sources', 'Repo and manifest'], zh: ['SDK 源码', '仓库与 manifest'] },
       { to: '/basic-compile', en: ['Basic Compile', 'Build from source'], zh: ['基础编译', '从源码构建'] },
       { to: '/tools', en: ['Tools', 'Host-side utilities'], zh: ['工具', '主机端工具'] },
-      { to: '/downloads', en: ['All Downloads', 'Images, SDK, files'], zh: ['全部下载', '镜像、SDK、资料'] },
+      { to: '/firmware-images', en: ['Firmware Images', 'Factory and OS images'], zh: ['固件镜像', '工厂与系统镜像'] },
     ],
   },
   {
-    en: 'Resources', zh: '资源', icon: 'M4 4h16v16H4zM8 9h8M8 13h8M8 17h5',
+    en: 'System & resources', zh: '系统与资源', icon: 'M4 4h16v16H4zM8 9h8M8 13h8M8 17h5',
     items: [
+      { to: '/common', en: ['Common', 'Platform interface usage'], zh: ['通用接口', '平台接口用法'] },
+      { to: '/gpio', en: ['GPIO', 'Numbering and control'], zh: ['GPIO', '编号规则与读写'] },
       { to: '/linux', en: ['Linux', 'Images and system setup'], zh: ['Linux', '镜像与系统配置'] },
       { to: '/android', en: ['Android', 'Flashing and customisation'], zh: ['Android', '烧录与平台定制'] },
       { to: '/others', en: ['Others', 'Shared system-setup notes'], zh: ['其他', '通用系统配置说明'] },

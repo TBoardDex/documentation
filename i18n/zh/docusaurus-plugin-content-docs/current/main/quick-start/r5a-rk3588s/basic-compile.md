@@ -1,6 +1,6 @@
 ---
 title: "基础编译"
-sidebar_label: "Basic Compilation"
+sidebar_label: "基础编译"
 sidebar_position: 6
 slug: "/basic-compile"
 ---

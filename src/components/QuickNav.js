@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from '@docusaurus/Link';
 import { useTBoard, Glyph } from './siteData';
 
 export default function QuickNav({ mobile }) {
   const { t, prefix, quickGroups } = useTBoard();
   const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  // Close on outside click / Escape. Keeping the panel open after an in-site
+  // navigation is jarring, so links also close it via onClick.
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDocClick = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const close = () => setOpen(false);
 
   if (mobile) {
     return (
@@ -23,7 +44,7 @@ export default function QuickNav({ mobile }) {
   }
 
   return (
-    <div className="tb-quicknav" onMouseLeave={() => setOpen(false)}>
+    <div className="tb-quicknav" ref={rootRef} onMouseLeave={close}>
       <button
         type="button"
         className="tb-quicknav__trigger"
@@ -37,7 +58,7 @@ export default function QuickNav({ mobile }) {
       </button>
 
       {open && (
-        <div className="tb-quicknav__panel" role="menu">
+        <div className="tb-quicknav__panel" role="menu" onClick={close}>
           <div className="tb-quicknav__head">
             <div>
               <span className="tb-eyebrow tb-eyebrow--dark">TBOARD DOCS</span>
@@ -65,7 +86,7 @@ export default function QuickNav({ mobile }) {
           </div>
           <div className="tb-quicknav__foot">
             {t.communityLinks.map(([label, href]) => (
-              <a href={href} key={label} target="_blank" rel="noreferrer">
+              <a href={href} key={label} target="_blank" rel="noreferrer" onClick={close}>
                 {label} <span aria-hidden="true">↗</span>
               </a>
             ))}

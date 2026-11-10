@@ -1,6 +1,6 @@
 ---
 title: "R5A（RK3588S）快速上手"
-sidebar_label: "Overview"
+sidebar_label: "概览"
 sidebar_position: 1
 slug: "/quick-start"
 ---

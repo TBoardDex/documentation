@@ -1,6 +1,6 @@
 ---
 title: "MIPI CSI 摄像头"
-sidebar_label: "Camera"
+sidebar_label: "摄像头"
 sidebar_position: 9
 slug: "/camera"
 ---

@@ -1,6 +1,6 @@
 ---
 title: "音频"
-sidebar_label: "Audio"
+sidebar_label: "音频"
 sidebar_position: 10
 slug: "/audio"
 ---

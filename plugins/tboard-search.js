@@ -130,7 +130,10 @@ function buildIndex(locale) {
       if (labels[key]) { section = labels[key]; break; }
     }
     const text = plainText(body);
-    const title = fm.title || stripNumberPrefix(parts[parts.length - 1].replace(/\.md$/, ''));
+    const title =
+      fm.title ||
+      fm.sidebar_label ||
+      stripNumberPrefix(parts[parts.length - 1].replace(/\.md$/, ''));
 
     return {
       locale,

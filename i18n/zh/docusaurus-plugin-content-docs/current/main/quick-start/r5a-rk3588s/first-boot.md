@@ -1,6 +1,6 @@
 ---
 title: "首次开机"
-sidebar_label: "First Boot"
+sidebar_label: "首次上电"
 sidebar_position: 5
 slug: "/first-boot"
 ---

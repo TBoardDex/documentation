@@ -47,7 +47,7 @@ Under the following terms:
 
 ## Trademark
 
-The **TBoard** name and logo are trademarks of Fuzhou Tianshu Technology and are
+The **TBoard** name and logo are trademarks of TBoard and are
 **not** covered by the CC BY-SA 4.0 licence. You may not use the trademark to
 brand derivative hardware without written permission. Descriptive references
 such as "compatible with TBoard R5A" are permitted.

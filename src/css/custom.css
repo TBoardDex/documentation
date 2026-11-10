@@ -261,6 +261,17 @@ html { scroll-behavior: smooth; }
   z-index: 200;
   animation: tb-pop .16s ease-out;
 }
+/* Invisible bridge over the trigger-to-panel gap. Without it the pointer
+   crosses a strip owned by the navbar, the container's onMouseLeave fires and
+   the panel closes before any item can be clicked. */
+.tb-quicknav__panel::before {
+  content: '';
+  position: absolute;
+  top: -16px;
+  left: -20px;
+  right: 0;
+  height: 16px;
+}
 @keyframes tb-pop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 
 .tb-quicknav__head {

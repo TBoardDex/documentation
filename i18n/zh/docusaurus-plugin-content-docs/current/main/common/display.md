@@ -1,6 +1,6 @@
 ---
 title: "显示输出"
-sidebar_label: "Display"
+sidebar_label: "显示"
 sidebar_position: 8
 slug: "/display"
 ---

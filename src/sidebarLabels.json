@@ -1,0 +1,23 @@
+{
+  "Accessories": "外围配件",
+  "Assembly": "装配",
+  "Basic Compilation": "基础编译",
+  "Boards": "开发板",
+  "Common": "通用",
+  "Download Firmware": "下载固件",
+  "Downloads": "资料下载",
+  "Firmware Images": "固件镜像",
+  "First Boot": "首次上电",
+  "Flashing": "镜像烧录",
+  "Hardware Files": "硬件资料",
+  "Hardware Open Source License": "硬件开源协议",
+  "Home": "首页",
+  "Licenses": "许可协议",
+  "Others": "其他",
+  "Overview": "概览",
+  "Quick Start": "快速上手",
+  "R5A (RK3588S)": "R5A（RK3588S）",
+  "SDK & Sources": "SDK 与源码",
+  "Software Open Source License": "软件开源协议",
+  "Tools & Drivers": "工具与驱动"
+}

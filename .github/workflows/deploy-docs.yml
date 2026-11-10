@@ -1,0 +1,77 @@
+name: Build & Deploy Docusaurus Docs
+permissions:
+  contents: read
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build docusaurus
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docusaurus-build
+          path: build/
+          retention-days: 1
+
+  deploy-en:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: docusaurus-build
+          path: build/
+
+      - name: Rsync deploy EN
+        uses: burnett01/rsync-deployments@7.1.0
+        with:
+          switches: -avz --delete
+          path: build/
+          remote_path: ${{ secrets.WEB_PATH }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+  deploy-cn:
+    needs: deploy-en
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: docusaurus-build
+          path: build/
+
+      - name: Rsync deploy CN
+        uses: burnett01/rsync-deployments@7.1.0
+        with:
+          switches: -avz --delete
+          # ✅ 这里改成 build/zh/，和你日志匹配！
+          path: build/zh/
+          remote_path: ${{ secrets.CN_WEB_PATH }}
+          remote_host: ${{ secrets.CN_SSH_HOST }}
+          remote_user: ${{ secrets.CN_SSH_USER }}
+          remote_key: ${{ secrets.CN_SSH_PRIVATE_KEY }}

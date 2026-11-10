@@ -1,0 +1,17 @@
+{
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Expand sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Collapse sidebar"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "This page crashed."
+  },
+  "theme.NotFoundPage.title": {
+    "message": "Page Not Found"
+  },
+  "theme.common.editThisPage": {
+    "message": "Edit this page"
+  }
+}

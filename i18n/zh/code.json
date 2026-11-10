@@ -1,0 +1,17 @@
+{
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "展开侧栏"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "收起侧栏"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "页面出错了。"
+  },
+  "theme.NotFoundPage.title": {
+    "message": "页面未找到"
+  },
+  "theme.common.editThisPage": {
+    "message": "编辑此页"
+  }
+}

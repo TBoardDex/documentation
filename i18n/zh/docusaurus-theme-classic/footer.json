@@ -1,0 +1,26 @@
+{
+  "link.title.Documentation": {
+    "message": "文档"
+  },
+  "link.title.TBoard": {
+    "message": "TBoard"
+  },
+  "link.item.label.Home": {
+    "message": "首页"
+  },
+  "link.item.label.TBoard R5A": {
+    "message": "TBoard R5A"
+  },
+  "link.item.label.Website": {
+    "message": "官网"
+  },
+  "link.item.label.中国站": {
+    "message": "中国站"
+  },
+  "link.item.label.Forum": {
+    "message": "论坛"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub"
+  }
+}

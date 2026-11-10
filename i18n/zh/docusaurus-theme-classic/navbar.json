@@ -1,0 +1,26 @@
+{
+  "item.label.Documentation": {
+    "message": "文档",
+    "description": "Navbar item with label Documentation"
+  },
+  "item.label.Forum": {
+    "message": "论坛",
+    "description": "Navbar item with label Forum"
+  },
+  "item.label.Website": {
+    "message": "官网",
+    "description": "Navbar item with label Website"
+  },
+  "item.label.中国站": {
+    "message": "中国站",
+    "description": "Navbar item with label 中国站"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  },
+  "item.label.TBoard Docs": {
+    "message": "TBoard 文档",
+    "description": "Navbar item with label TBoard Docs"
+  }
+}

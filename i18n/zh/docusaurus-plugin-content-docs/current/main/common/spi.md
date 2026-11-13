@@ -7,35 +7,69 @@ slug: "/spi"
 
 # SPI
 
-![SPI 总线接线占位图 800 x 450 px](/img/placeholder-800x450.png)
+RK3588(S) 带有硬件 SPI 控制器，TBoard 板卡把它们引到 40-pin 排针。哪个控制器
+引到哪些引脚、带几路片选，由板卡决定——请查看 Boards 下对应板卡的引脚定义页
+与接口使用页。电平为 **3.3 V**。
 
-> 图片占位：**800 × 450 px**（建议用途：接法照片 / 接线示意图）。后期请替换为
-> 相同尺寸的真实图片。
+## 确认总线可用
 
-RK3588(S) 提供硬件 SPI 控制器，TBoard 板卡将其引到 40-pin 排针。具体引出哪个
-控制器、占用哪些引脚由板卡决定——请查看对应板卡的引脚定义，例如
-[R5A 40-PIN 引脚定义](/r5a-pinout)（SPI0，带两个片选）。逻辑电平为
-**3.3 V**。
+控制器需要由 overlay 启用并同时导出 `spidev`，否则引脚保持 GPIO 功能，也不会
+出现 `/dev/spidev*`：
 
-## 验证总线
+```bash
+ls /boot/dtb/overlay/ | grep spi             # TBoard SDK 镜像
+ls /boot/dtb/rockchip/overlay/ | grep spi    # Armbian 镜像
+```
 
-启用 `spidev` 接口后会出现一个或多个 `/dev/spidev*` 节点。最快的验证方法是
-MOSI 与 MISO 回环测试：
+在 `/boot/uEnv/uEnv.txt`（SDK 镜像）或 `/boot/armbianEnv.txt` 的 `overlays=` 行
+中启用对应项，`sync` 后重启，再检查：
 
 ```bash
 ls /dev/spidev*
-# 短接 MOSI 与 MISO，发送字节并确认原样返回
+# 例如：/dev/spidev0.0  /dev/spidev0.1
 ```
 
-用你顺手的 spidev 测试工具，或几行 Python（`spidev` 包）发送字节并确认
-原样返回即可。
+`spidev0.0` 对应片选 0，`spidev0.1` 对应片选 1。如果只有一个节点，说明该
+overlay 只导出了一路片选——请改用声明两路的版本，或在 overlay 中再声明一个
+器件。
 
-## 挂载设备
+## 回环测试
 
-显示屏、ADC、CAN 控制器等设备通过设备树 overlay 接入。overlay 负责选择片选
-线与最大时钟频率——使用杜邦线时超过 50 MHz 前请先核对器件手册。
+用跳线短接 **MOSI 与 MISO**，发送数据并确认原样返回。使用内核的 `spidev_test`
+工具：
+
+```bash
+spidev_test -D /dev/spidev0.0 -s 1000000 -v
+```
+
+没有该工具时，几行 Python 也可以：
+
+```python
+import spidev
+spi = spidev.SpiDev()
+spi.open(0, 0)              # 总线 0，片选 0
+spi.max_speed_hz = 1_000_000
+spi.mode = 0                # CPOL=0, CPHA=0
+print(spi.xfer2([0x01, 0x02, 0x03]))
+spi.close()
+```
+
+输出应与发送的字节一致。如果全是 `0x00` 或全 `0xFF`，依次检查跳线、片选引脚和
+引脚复用配置。
+
+## 器件参数
+
+| 参数 | 说明 |
+|---|---|
+| 模式 | `0`–`3`，由器件手册中的 CPOL/CPHA 决定 |
+| 速率 | 杜邦线上 1–10 MHz 较安全；50 MHz 需要短且阻抗受控的连接 |
+| 字长 | 默认 8 位，不少 ADC 使用 16 位或 32 位 |
+| 片选 | 低电平有效；部分器件要求片选跨传输保持（`spi-cs-high` / `cs_change`） |
+
+overlay 同时定义了片选数量和最高时钟。在用户态把速率提到 overlay 声明值以上，
+有些驱动会直接忽略——要改请在 overlay 中改。
 
 ## 相关页面
 
-- [R5A 40-PIN 引脚定义](/r5a-pinout) — R5A 的 SPI 引脚。
 - [I2C](/i2c) — 低速传感器总线。
+- [Linux](/linux#设备树与-overlay) — overlay 配置方法。

@@ -562,6 +562,69 @@ body:has(.tb-hero) .tb-showcase,
 body:has(.tb-hero) .tb-community { grid-template-columns: 1fr; gap: 20px; padding: 22px 0; }
 body:has(.tb-hero) .tb-note { padding: 16px 18px; }
 
+/* ------------------------------------------- pinout function colour chips */
+/* Colours encode the peripheral type, matching the official pinmux diagram. */
+.pinfunc {
+  display: inline-block;
+  padding: 0 7px;
+  margin: 1px 0;
+  border-radius: 5px;
+  font-size: .82em;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.pinfunc--gpio   { background: #e6f4ea; color: #1e7e34; }
+.pinfunc--uart   { background: #fff0e0; color: #c25e00; }
+.pinfunc--i2c    { background: #f3e8fd; color: #7a1fa2; }
+.pinfunc--spi    { background: #fde7f1; color: #b71666; }
+.pinfunc--pwm    { background: #e0f5f3; color: #00786a; }
+.pinfunc--can    { background: #e3f0fd; color: #0b5cad; }
+.pinfunc--i2s    { background: #e9ecfb; color: #2f3d9e; }
+.pinfunc--spdif  { background: #f0ebe4; color: #6d4c2f; }
+.pinfunc--pdm    { background: #e9eef2; color: #3c4f5d; }
+.pinfunc--jtag   { background: #efefef; color: #555555; }
+.pinfunc--power  { background: #fde3e3; color: #c62828; }
+.pinfunc--gnd    { background: #e4e6e8; color: #3f474e; }
+[data-theme='dark'] .pinfunc--gpio   { background: #12351d; color: #6fcf8e; }
+[data-theme='dark'] .pinfunc--uart   { background: #3d280e; color: #f2a65a; }
+[data-theme='dark'] .pinfunc--i2c    { background: #33153f; color: #d08cf0; }
+[data-theme='dark'] .pinfunc--spi    { background: #3f1228; color: #f07ab5; }
+[data-theme='dark'] .pinfunc--pwm    { background: #0d3430; color: #4fd0bf; }
+[data-theme='dark'] .pinfunc--can    { background: #0f2c4d; color: #6cb2f5; }
+[data-theme='dark'] .pinfunc--i2s    { background: #1b2350; color: #93a1f5; }
+[data-theme='dark'] .pinfunc--spdif  { background: #34271a; color: #c8a578; }
+[data-theme='dark'] .pinfunc--pdm    { background: #22303a; color: #8fa9bb; }
+[data-theme='dark'] .pinfunc--jtag   { background: #2c2c2c; color: #9e9e9e; }
+[data-theme='dark'] .pinfunc--power  { background: #481414; color: #f26d6d; }
+[data-theme='dark'] .pinfunc--gnd    { background: #2b3136; color: #9fb0ba; }
+
+/* ---------------------------------------------- pin number colour chips */
+/* Solid fills mark the pin's rail on the 40-pin header: 3V3 yellow, 5V0 red,
+   GND black, pins 27/28 blue, every other GPIO pin green. */
+.pinnum {
+  display: inline-block;
+  min-width: 1.7em;
+  padding: 0 5px;
+  margin: 1px 0;
+  border-radius: 5px;
+  font-size: .82em;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+}
+.pinnum--3v3     { background: #f6c324; color: #4d3b00; }
+.pinnum--5v0     { background: #e03131; }
+.pinnum--gnd     { background: #1b1e21; }
+.pinnum--special { background: #1971c2; }
+.pinnum--gpio    { background: #2f9e44; }
+[data-theme='dark'] .pinnum--3v3     { background: #d9a514; color: #2b2100; }
+[data-theme='dark'] .pinnum--5v0     { background: #e03131; }
+[data-theme='dark'] .pinnum--gnd     { background: #343a40; }
+[data-theme='dark'] .pinnum--special { background: #339af0; }
+[data-theme='dark'] .pinnum--gpio    { background: #37b24d; }
+
 /* ------------------------------------------------------------ responsive */
 @media (max-width: 1320px) {
   .tb-navlink__text, .tb-navlink__ext { display: none; }

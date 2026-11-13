@@ -72,7 +72,7 @@ const QUICK_GROUPS = [
     items: [
       { to: '/tboard-r5a', en: ['R5A Board Specs', 'Connectors and interfaces'], zh: ['R5A 板卡规格', '连接器与接口'] },
       { to: '/r5a-pinout', en: ['40-PIN Pinout', 'Full pin definition table'], zh: ['40-PIN 引脚定义', '完整引脚定义表'] },
-      { to: '/assembly', en: ['Assembly', 'Mounting and wiring'], zh: ['装配与接线', '安装与连线'] },
+      { to: '/assembly', en: ['Assembly', 'Mounting and wiring'], zh: ['组装与连接', '安装与连线'] },
       { to: '/hardware-files', en: ['Hardware Files', 'Schematics and mechanical data'], zh: ['硬件资料', '原理图与结构图'] },
     ],
   },

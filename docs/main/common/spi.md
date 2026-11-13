@@ -7,36 +7,71 @@ slug: "/spi"
 
 # SPI
 
-![SPI bus wiring placeholder 800 x 450 px](/img/placeholder-800x450.png)
-
-> Image placeholder: **800 × 450 px** (suggested use: connection photo /
-> wiring diagram). Replace it later with a verified image of the same dimensions.
-
 RK3588(S) provides hardware SPI controllers, and TBoard boards route them to
-the 40-pin header. Which controller is routed where is board-specific — see
-your board's pinout, for example the [R5A 40-PIN Pinout](/r5a-pinout)
-(SPI0 with two chip selects). Logic level is **3.3 V**.
+the 40-pin header. Which controller is routed where, with how many chip
+selects, is board-specific — see your board's pinout and interface page under
+Boards. Logic level is **3.3 V**.
 
 ## Verify the bus
 
-When the `spidev` interface is enabled, one or more `/dev/spidev*` nodes
-appear. A quick loopback test links MOSI to MISO:
+The controller must be enabled by an overlay that also exposes `spidev`; without
+it the pins stay GPIO and no `/dev/spidev*` node appears:
+
+```bash
+ls /boot/dtb/overlay/ | grep spi             # TBoard SDK image
+ls /boot/dtb/rockchip/overlay/ | grep spi    # Armbian-based image
+```
+
+Enable the matching overlay in `/boot/uEnv/uEnv.txt` (SDK image) or in the
+`overlays=` line of `/boot/armbianEnv.txt`, `sync`, reboot, then check:
 
 ```bash
 ls /dev/spidev*
-# jumper MOSI to MISO, then send bytes and check they come back
+# for example: /dev/spidev0.0  /dev/spidev0.1
 ```
 
-Use your preferred spidev test tool or a few lines of Python (`spidev` package)
-to send bytes and confirm they come back unchanged.
+`spidev0.0` is chip select 0, `spidev0.1` is chip select 1. If only one node
+exists, the overlay exposes only one chip select — enable the variant that
+declares both, or add a second device to the overlay.
 
-## Enabling devices
+## Loopback test
 
-Attach displays, ADCs and CAN controllers through a device-tree overlay. The
-overlay selects the chip-select line and the maximum clock speed — check the
-device datasheet before exceeding 50 MHz on jumper wires.
+Jumper **MOSI to MISO** and send bytes to confirm they come back.
+With the kernel `spidev_test` tool:
+
+```bash
+spidev_test -D /dev/spidev0.0 -s 1000000 -v
+```
+
+Without the tool, a few lines of Python are enough:
+
+```python
+import spidev
+spi = spidev.SpiDev()
+spi.open(0, 0)              # bus 0, chip select 0
+spi.max_speed_hz = 1_000_000
+spi.mode = 0                # CPOL=0, CPHA=0
+print(spi.xfer2([0x01, 0x02, 0x03]))
+spi.close()
+```
+
+The output must repeat the transmitted bytes. If it returns all `0x00` or all
+`0xFF`, check the jumper, the chip-select pin and the pin mux.
+
+## Device settings
+
+| Setting | Notes |
+|---|---|
+| Mode | `0`–`3`, set by CPOL/CPHA from the device datasheet |
+| Speed | 1–10 MHz is safe on jumper wires; 50 MHz needs a short, impedance-controlled connection |
+| Word size | 8 bits by default, many ADCs use 16 or 32 bits |
+| Chip select | Polarity is active-low; some devices need CS held across transfers (`spi-cs-high` / `cs_change`) |
+
+Overlays also define the chip-select count and the maximum clock. Raising the
+clock in user space above what the overlay declares is ignored by some drivers —
+change it in the overlay instead.
 
 ## Related
 
-- [R5A 40-PIN Pinout](/r5a-pinout) — SPI pins on the R5A.
 - [I2C](/i2c) — low-speed sensor bus.
+- [Linux](/linux#device-tree-and-overlays) — overlay configuration.

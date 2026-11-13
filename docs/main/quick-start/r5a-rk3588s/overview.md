@@ -21,8 +21,13 @@ specifications on the [TBoard R5A](/tboard-r5a) page.
 - TBoard R5A board
 - Optional heatsink / fan kit (recommended for long-running workloads)
 
+![TBoard R5A box contents placeholder 1200 x 675 px](/img/placeholder-1200x675.png)
+
+> Image placeholder: **1200 × 675 px** (suggested use: box contents photo).
+> Replace it later with a verified image of the same dimensions.
+
 You will also need: a **5 V / 3 A USB Type-C** power adapter (board accepts
-5–23 V), a microSD card (Class 10, ≥ 8 GB) or eMMC module, a Micro-HDMI cable,
+5–23 V), a microSD card (≥ 32 GB) or eMMC module, a Micro-HDMI cable,
 and optionally a 3.3 V USB-to-serial adapter for the debug console.
 
 ## Four steps

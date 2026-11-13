@@ -18,16 +18,41 @@ Attach the heatsink to the SoC. For sustained loads also mount the fan — the
 RK3588S can exceed 60 °C without airflow. Keep the fins clear of the 40-pin
 header and camera/display ribbon connectors.
 
+![cooling installation photo placeholder 800 x 450 px](/img/placeholder-800x450.png)
+
+> Image placeholder: **800 × 450 px** (suggested use: heatsink / fan installation
+> photo). Replace it later with a verified image of the same dimensions.
+
 ## 2. Connect storage
 
-Insert the eMMC module into its slot, or a microSD card (Class 10, ≥ 8 GB) into
-the card slot. Note the boot order: **microSD first**, then eMMC.
+Insert the eMMC module into its slot, or a microSD card (≥ 32 GB) into
+the card slot. Note the boot order: **eMMC first**, then microSD.
+
+![eMMC module and microSD slot locations (board back)](/img/r5a-storage-install.png)
 
 ## 3. Connect display
 
-- **HDMI**: Micro-HDMI → HDMI cable to the Micro HDMI port (up to 8Kp60).
-- **DP**: Mini DP to a DP monitor directly (4Kp60), or to HDMI with an
-  **active** converter only.
+- **HDMI**: pick either wiring option:
+  - A **Micro-HDMI-to-HDMI-female adapter** plus a standard HDMI cable: plug the
+    adapter into the board's Micro HDMI port, then connect the display with the
+    standard HDMI cable;
+
+  ![Micro HDMI to HDMI female adapter](/img/r5a-hdmi-female-adapter.png)
+
+  - A single **Micro-HDMI-to-HDMI-male cable** (Micro HDMI male → HDMI male):
+    connects straight to an HDMI monitor.
+
+  ![Micro HDMI to HDMI male cable](/img/r5a-hdmi-direct-cable.png)
+
+- **DP**: pick either wiring option:
+  - A **Mini-DP-to-HDMI cable** (active): for an HDMI monitor — DP to HDMI only
+    works with an **active** solution;
+
+  ![Mini DP to HDMI cable](/img/r5a-minidp-hdmi.png)
+
+  - A **Mini-DP-to-DP cable**: connects straight to a DP monitor.
+
+  ![Mini DP to DP cable](/img/r5a-minidp-dp.png)
 - **MIPI DSI panel**: 15-pin FFC ribbon to the DSI connector, plus 5 V / GND
   from 40-pin Pin 2 / Pin 6 — see [Display](/display).
 

@@ -21,8 +21,13 @@ slug: "/quick-start"
 - TBoard R5A 板卡
 - 散热片 / 风扇套件（选配；长时间运行建议安装）
 
+![TBoard R5A 开箱内容实物占位图 1200 x 675 px](/img/placeholder-1200x675.png)
+
+> 图片占位：**1200 × 675 px**（建议用途：开箱清单实物照片）。后期请替换为
+> 相同尺寸的真实图片。
+
 还需要自备：**5 V / 3 A USB Type-C** 电源适配器（板卡支持 5–23 V 宽输入）、
-microSD 卡（Class 10 及以上，≥ 8 GB）或 eMMC 模块、Micro HDMI 线，以及可选的
+microSD 卡（≥ 32 GB）或 eMMC 模块、Micro HDMI 线，以及可选的
 3.3 V USB 转 TTL 串口线（调试串口）。
 
 ## 四步上手

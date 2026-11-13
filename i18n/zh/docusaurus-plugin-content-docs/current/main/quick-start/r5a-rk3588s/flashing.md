@@ -12,32 +12,42 @@ slug: "/flashing"
 > 图片占位：**800 × 450 px**（建议用途：操作照片 / 截图）。后期请替换为
 > 相同尺寸的真实图片。
 
-有两条烧录路径，都从[资料下载](/downloads)页面获取校验过的镜像开始。
+从[资料下载](/downloads)页面获取校验过的 `update.img` 镜像开始。
 
-## 方式一 — microSD 卡
+## 接线与上电
 
-1. 用 balenaEtcher、Rufus 或 `dd` 写入 SD 卡镜像：
+用 USB 双公头 A 对 A 线把电脑连接到板载 **USB 3.0 烧写口**，同时用 USB
+Type-C 线接到 **PWR IN** 口给开发板供电。板上至少要接入 eMMC 模块或
+microSD 卡其中一个，安装方法见[组装与连接 · 接入存储](/assembly#2-接入存储)。
 
-```bash
-xzcat tboard-r5a-debian.img.xz | sudo dd of=/dev/sdX bs=4M status=progress && sync
-```
+<img src="/img/r5a-flash-wiring.png" alt="固件烧入接线：USB 3.0 烧写口、Type-C 供电、Maskrom/Loader 短接点" width="700" />
 
-2. 弹出卡后插入 R5A 卡槽并上电——板卡优先从 microSD 启动。
+## 安装驱动（Windows）
 
-## 方式二 — eMMC
+先安装 Rockchip 官方的 **DriverAssitant**（瑞芯微驱动助手）：
 
-**进入烧录模式**（板卡断电，用 USB 双公头 A 对 A 线连接 PC 与板上 USB 3.0 口）：
+1. 解压后双击运行 `DriverInstall.exe`；
+2. 在「瑞芯微驱动助手」窗口点击 **驱动安装**，等待进度条完成；
+3. 弹出「安装驱动成功」提示后点击 **确定**。
 
-- **Loader 模式**：上电时把 Recovery 引脚与 GND 短接。
-- **Maskrom 模式**：上电时把 Maskrom 引脚与 GND 短接（eMMC 中已有损坏引导
-  程序时使用）。
+<img src="/img/r5a-driver-install.png" alt="DriverAssitant 驱动安装步骤" width="700" />
 
-**Windows**：安装 Rockchip USB 驱动，打开 RKDevTool，切到 *升级固件* 页，按
-提示先擦除 Flash，加载 `update.img`，点击 *升级*。
+## 固件烧入
 
-**Linux**：使用 `upgrade_tool`（或 `rkdeveloptool`）写入同一个 `update.img`。
+打开瑞芯微开发工具（RKDevTool），底部显示 **「没有发现设备」**是正常的：
 
-看到 *升级成功* 后再断开连接。
+<img src="/img/r5a-rkdevtool-nodevice.png" alt="烧写工具未发现设备" width="700" />
+
+此时用镊子或杜邦线把 **Maskrom 与 GND 短接**（或把 **Loader 与 GND 短接**）
+再上电，分别进入 Maskrom 模式或 Loader 模式——两者都是烧录模式。工具底部
+显示 **「发现一个 MASKROM 设备」**（或 LOADER 设备）后：
+
+<img src="/img/r5a-rkdevtool-flash.png" alt="烧写工具发现 MASKROM 设备" width="700" />
+
+1. 点击 **固件** 按钮选择需要烧录的 `update.img`；
+2. 点击 **升级**，等待右侧日志下载固件完成，最终显示 **「下载固件成功」**。
+
+烧录完成后断开 USB 线，重新上电即可启动。
 
 ## 相关页面
 

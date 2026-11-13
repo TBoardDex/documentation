@@ -50,10 +50,9 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 
 ## 板卡布局
 
-![TBoard R5A 板卡布局标注占位图 1200 x 675 px](/img/placeholder-1200x675.png)
+![TBoard R5A 板卡正面布局](/img/r5a-layout-front.jpg)
 
-> 图片占位：**1200 × 675 px**（建议用途：带标注的板卡布局图）。后期请替换为
-> 相同尺寸的真实图片。
+![TBoard R5A 板卡背面布局](/img/r5a-layout-back.jpg)
 
 ## 接口一览
 
@@ -61,7 +60,7 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 |---|---|---|
 | Micro HDMI 输出 | 1 | 最高 8Kp60，使用 Micro HDMI 转 HDMI 线缆。 |
 | Mini DP 输出 | 1 | 最高 4Kp60；Mini DP 转 HDMI 必须使用**有源**转换线。 |
-| USB 3.0 | 2 | Host 接口；配合 USB 双公头线可用于 eMMC 烧录。 |
+| USB 3.0 | 2 | Host 接口；配合 USB 双公头线可用于固件烧入。 |
 | USB 2.0 | 2 | Host 接口。 |
 | USB Type-C（PWR IN） | 1 | 仅作电源输入，不是数据接口。 |
 | MIPI CSI | 1 | 兼容 IMX219 摄像头模组。 |
@@ -89,9 +88,41 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 - 无有效散热时，主芯片表面温度可能超过 60 °C——长时间运行前请先装好
   散热片 / 风扇。
 
+## 按键与指示灯
+
+| 项目 | 数量 | 行为 |
+|---|---|---|
+| PWRON 按键 | 1 | 开关机与休眠唤醒 |
+| Maskrom 按键 | 1 | 上电时按住即可进入 Maskrom 烧录模式 |
+| 电源指示灯（红） | 1 | 供电正常时常亮 |
+| 用户指示灯（绿） | 1 | 默认熄灭，可由用户态控制 |
+
+排针上的 **Maskrom / Loader 引脚**可以实现与按键相同的效果：上电时把
+`Maskrom`（或 `Loader`）引脚短接到 GND。用按键更稳妥，不会误碰到相邻引脚。
+
+用户指示灯是标准的 LED class 设备：
+
+```bash
+ls /sys/class/leds/
+echo 1 | sudo tee /sys/class/leds/led2-green-usr/brightness          # 点亮
+echo 0 | sudo tee /sys/class/leds/led2-green-usr/brightness          # 熄灭
+echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # 心跳闪烁
+```
+
+红灯亮而绿灯不亮，说明内核在运行、只是 LED trigger 为 `none`，不是硬件故障。
+
+## 硬件版本
+
+| 版本 | 改动 |
+|---|---|
+| V1.0 | 首个量产版本 |
+| V1.1 | U27 / U7 / U6301 电源引脚调整；USB 走线调整（U15 改到 TypeC0，CN31 改为 USB 2.0）；40-pin 增加 UART 保护并改用 0.8 mm 连接器；CSI1 改到 I2C4 并去掉 R6352；Wi-Fi 模组更换为 AP6275P |
+
+对照原理图测量前，先确认丝印上的版本号。完整改动列表见[硬件资料](/hardware-files)。
+
 ## 启动顺序
 
-R5A **优先从 microSD 启动**，其次才是 eMMC。卡槽里残留旧镜像的卡时请留意
+R5A **优先从 eMMC 启动**，其次才是 microSD。卡槽里残留旧镜像的卡时请留意
 这一点。
 
 ## 相关页面

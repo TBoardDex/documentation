@@ -23,19 +23,26 @@ All R5A images are published on the [Downloads](/downloads) page. Choose:
 
 ## Verify before flashing
 
-Check the SHA-256 checksum of the downloaded file before writing it:
+Check the MD5 checksum of the downloaded file before writing it. The download
+page provides the `.img` image together with its `-md5.txt` checksum file.
 
-```bash
-sha256sum tboard-r5a-debian.img.xz
-# compare with the value published next to the download link
+**Windows** (run in cmd):
+
+```bat
+certutil -hashfile TBoard-R5A-ubuntu22.04-GNOME-V1.0.0.img MD5
+:: compare the output with the value in the -md5.txt file
 ```
 
-## Image types at a glance
+<img src="/img/r5a-md5-windows.png" alt="Verifying MD5 with certutil on Windows" width="700" />
 
-| Type | Written with | Goes to |
-|---|---|---|
-| SD-card image | balenaEtcher / Rufus / `dd` | microSD card |
-| `update.img` | RKDevTool (Windows) or upgrade_tool (Linux) | eMMC |
+**Linux** (`md5sum`):
+
+```bash
+md5sum TBoard-R5A-debian11-Xfce-V1.0.0.img
+# compare the output with the value in the -md5.txt file
+```
+
+<img src="/img/r5a-md5-linux.png" alt="Verifying MD5 with md5sum on Linux" width="700" />
 
 ## Related
 

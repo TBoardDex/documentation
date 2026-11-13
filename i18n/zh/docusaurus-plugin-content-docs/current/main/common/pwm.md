@@ -7,32 +7,64 @@ slug: "/pwm"
 
 # PWM
 
-![PWM 舵机接线占位图 800 x 450 px](/img/placeholder-800x450.png)
+RK3588(S) 有多路硬件 PWM。哪些通道引到 40-pin 排针、分别在哪几个引脚，由板卡
+决定——请查看 Boards 下对应板卡的引脚定义页与接口使用页。典型用途：舵机、背光
+调光、蜂鸣器和风扇调速。启用 PWM 会占用同一引脚的 GPIO 功能。
 
-> 图片占位：**800 × 450 px**（建议用途：接法照片 / 接线示意图）。后期请替换为
-> 相同尺寸的真实图片。
+## 启用通道
 
-RK3588(S) 提供多路硬件 PWM 通道。哪些通道引到 40-pin 排针、占用哪些引脚由
-板卡决定——请查看对应板卡的引脚定义，例如
-[R5A 40-PIN 引脚定义](/r5a-pinout)。典型用途：舵机控制、背光调光、蜂鸣器与
-风扇调速。启用 PWM 会占用同一引脚上的 GPIO 功能。
+PWM 通道**默认关闭**。启用对应的 overlay：
+
+```bash
+ls /boot/dtb/overlay/ | grep pwm             # TBoard SDK 镜像
+ls /boot/dtb/rockchip/overlay/ | grep pwm    # Armbian 镜像
+```
+
+然后加入 `/boot/uEnv/uEnv.txt`（SDK 镜像）或 `/boot/armbianEnv.txt` 的
+`overlays=` 行，`sync` 后重启。已被板载功能占用的通道（风扇曲线、屏幕背光）
+不要重复申请；各板卡页面会标出哪些通道是空闲的。
 
 ## 使用 PWM
 
-设备树启用后，PWM 通道出现在 `/sys/class/pwm/`：
+设备树启用通道后，会在 `/sys/class/pwm/` 下出现对应目录，数值单位是**纳秒**：
 
 ```bash
-ls /sys/class/pwm/
-echo 0 > /sys/class/pwm/pwmchip*/export   # 如需要
-echo 20000 > /sys/class/pwm/pwmchip*/pwm0/period    # 20 kHz 周期
-echo 1500  > /sys/class/pwm/pwmchip*/pwm0/duty_cycle
-echo 1     > /sys/class/pwm/pwmchip*/pwm0/enable
+ls /sys/class/pwm/                     # pwmchipN
+cat /sys/class/pwm/pwmchip2/npwm       # 该芯片的通道数
+echo 0 > /sys/class/pwm/pwmchip2/export
+ls /sys/class/pwm/pwmchip2/pwm0/
 ```
 
-通道编号取决于 overlay 启用的通道，先用 `ls` 确认。控制舵机时常用 20 ms 周期、
-0.5–2.5 ms 占空比作为起点。
+配置并启动输出：
+
+```bash
+echo 20000 > /sys/class/pwm/pwmchip2/pwm0/period      # 20 ms 周期（50 Hz）
+echo 1500  > /sys/class/pwm/pwmchip2/pwm0/duty_cycle  # 1.5 ms 脉宽
+echo normal > /sys/class/pwm/pwmchip2/pwm0/polarity
+echo 1     > /sys/class/pwm/pwmchip2/pwm0/enable
+```
+
+几个容易踩的规则：
+
+- `duty_cycle` 必须**小于** `period`，否则写入返回 `EINVAL`。先写 `period`。
+- `duty_cycle` 等于 `period` 时无法关闭通道；先把占空比调小，再往 `enable`
+  写 `0`。
+- 芯片号与通道号取决于 overlay。请用 `ls -l /sys/class/pwm/` 与
+  `cat .../npwm` 确认，不要假定就是 `pwmchip0`。
+
+## 舵机与背光示例
+
+| 目标 | 周期 | 占空比 |
+|---|---|---|
+| 航模舵机（SG90） | 20 ms | 0.5 ms（0°）… 2.5 ms（180°） |
+| LED 调光 | 1 ms | 周期的 0 % … 100 % |
+| 4 线 PC 风扇 | 25 kHz | 20 % … 100 %（低于 20 % 多数风扇会停转） |
+| 无源蜂鸣器 | 1 / 频率 | 50 % 时最响 |
+
+蜂鸣器靠周期决定音调：1 kHz 对应 `period = 1000000` ns。
 
 ## 相关页面
 
-- [R5A 40-PIN 引脚定义](/r5a-pinout) — R5A 的 PWM 引脚。
-- [GPIO](/gpio) — 编号规则与控制方法。
+- [GPIO](/gpio) — 同一引脚上的编号规则与控制方式。
+- [其他](/others) — 由热管理子系统驱动的风扇曲线。
+- [Linux](/linux#设备树与-overlay) — overlay 配置方法。

@@ -51,10 +51,9 @@ gateways, robotics controllers, and general Linux development.
 
 ## Board layout
 
-![TBoard R5A board layout placeholder 1200 x 675 px](/img/placeholder-1200x675.png)
+![TBoard R5A board layout — front](/img/r5a-layout-front.jpg)
 
-> Image placeholder: **1200 × 675 px** (suggested use: annotated board layout).
-> Replace it later with a verified image of the same dimensions.
+![TBoard R5A board layout — back](/img/r5a-layout-back.jpg)
 
 ## Interface summary
 
@@ -62,7 +61,7 @@ gateways, robotics controllers, and general Linux development.
 |---|---|---|
 | Micro HDMI out | 1 | Up to 8Kp60. Use a Micro-HDMI → HDMI cable. |
 | Mini DP out | 1 | Up to 4Kp60. Mini DP → HDMI requires an **active** converter cable. |
-| USB 3.0 | 2 | Host ports; also used for eMMC flash with a USB dual-male cable. |
+| USB 3.0 | 2 | Host ports; also used for firmware flashing with a USB dual-male cable. |
 | USB 2.0 | 2 | Host ports. |
 | USB Type-C (PWR IN) | 1 | Power input only, not a data port. |
 | MIPI CSI | 1 | IMX219-compatible camera module. |
@@ -90,9 +89,44 @@ gateways, robotics controllers, and general Linux development.
 - Without active cooling the main SoC can exceed 60 °C under load — attach the
   heatsink/fan kit before long-running workloads.
 
+## Buttons and LEDs
+
+| Item | Qty | Behaviour |
+|---|---|---|
+| PWRON button | 1 | Power on / off and sleep-wake |
+| Maskrom button | 1 | Hold while applying power to enter Maskrom flashing mode |
+| Power LED (red) | 1 | Always on while the board is powered correctly |
+| User LED (green) | 1 | Off by default, controlled from user space |
+
+The Maskrom and Loader **pins** on the header achieve the same thing as the
+button: short the pin named `Maskrom` (or `Loader`) to GND while powering up. The
+button is the safer option because it cannot slip onto a neighbouring pin.
+
+The user LED is a normal LED-class device:
+
+```bash
+ls /sys/class/leds/
+echo 1 | sudo tee /sys/class/leds/led2-green-usr/brightness          # on
+echo 0 | sudo tee /sys/class/leds/led2-green-usr/brightness          # off
+echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # blink
+```
+
+The green LED staying dark while the red one is lit means the kernel is running
+but the LED trigger is set to `none` — it is not a hardware fault.
+
+## Board revisions
+
+| Revision | Changes |
+|---|---|
+| V1.0 | Initial release |
+| V1.1 | Power-rail pin changes on U27 / U7 / U6301; USB re-routing (U15 to TypeC0, CN31 to USB 2.0); 40-pin header gained UART protection and 0.8 mm connectors; CSI1 moved to I2C4, R6352 removed; Wi-Fi module changed to AP6275P |
+
+Check the silkscreen marking before comparing a measurement with the schematic.
+The full change list is in [Hardware Files](/hardware-files).
+
 ## Boot order
 
-The R5A boots from **microSD first**, then eMMC. Keep this in mind when a card
+The R5A boots from **eMMC first**, then microSD. Keep this in mind when a card
 with an old image is left inserted.
 
 ## Related

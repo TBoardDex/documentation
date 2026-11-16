@@ -134,9 +134,9 @@ instead of a hand-written kick script.
 | Symptom | Check first |
 |---|---|
 | No output at all | Power supply voltage/current, then the serial console at 1500000 baud |
-| Boots to a shell but no display | `cat /sys/class/drm/*/status`, then the display overlay |
-| Interface missing (`/dev/i2c-*`, `/dev/spidev*`) | The overlay for that interface in `uEnv.txt` / `armbianEnv.txt` |
-| Peripheral silent after an overlay change | Pin mux conflict — one function per pin group |
+| Boots to a shell but no display | `cat /sys/class/drm/*/status`, then the display-related DTS configuration |
+| Interface missing (`/dev/i2c-*`, `/dev/spidev*`) | Whether the interface is enabled in the device tree and the dtb was replaced |
+| Peripheral silent after a device tree change | Pin mux conflict — one function per pin group |
 | Board reboots under load | Power budget: USB devices, fan, Type-C adapter rating |
 | eMMC not detected | `lsblk`, `dmesg \| grep mmc`, then re-seat or re-flash |
 
@@ -146,7 +146,7 @@ image).
 
 ## Related
 
-- [Linux](/linux) — accounts, network, overlays, kernel.
+- [Linux](/linux) — accounts, network, device tree, kernel.
 - [UART & Serial](/uart-serial) — the console used for recovery.
 - [GPIO](/gpio) / [I2C](/i2c) — interface verification.
 - [TBoard R5A](/tboard-r5a) — connectors and specifications.

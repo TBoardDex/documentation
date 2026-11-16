@@ -68,4 +68,4 @@ pull-ups are missing.
 
 - [SPI](/spi) — the other common low-speed bus.
 - [Others](/others) — RTC time keeping.
-- [Linux](/linux#device-tree-and-overlays) — overlay configuration.
+- [Linux](/linux#device-tree) — device tree configuration.

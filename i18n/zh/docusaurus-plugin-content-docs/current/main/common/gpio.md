@@ -138,4 +138,4 @@ PWM / CAN）就把引脚从普通 GPIO 拿走，反之亦然。SoC 只有一部�
 - [PWM](/pwm) — 同一引脚上的 PWM 用法。
 - [I2C](/i2c) · [SPI](/spi) · [UART 与串口](/uart-serial) — 复用功能的替代用法。
 - [GPIO 使用（R5A）](/r5a-gpio) — R5A 板级引脚分配与稳妥 GPIO 速查。
-- [Linux](/linux#设备树与-overlay) — 启用与关闭功能的方法。
+- [Linux](/linux#设备树) — 启用与关闭功能的方法。

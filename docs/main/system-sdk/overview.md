@@ -22,7 +22,8 @@ slug: "/accessories"
 - Camera modules, lenses and cable / adapter requirements.
 - Cooling kits, heatsinks, fans and cases.
 - Expansion boards, add-on cards, power adapters and cables.
-- Compatibility notes per board revision and the matching device-tree overlay.
+- Compatibility notes per board revision and the matching device tree
+  configuration.
 
 ## Related pages
 

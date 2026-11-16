@@ -15,7 +15,7 @@ slug: "/linux"
 TBoard Linux images are Rockchip BSP builds: a vendor 6.1 kernel, a Debian or
 Ubuntu root filesystem and U-Boot with the R5A board support added. This page
 covers what to do **after** the image boots — accounts, network, packages,
-kernel and overlays. Flashing is on [Flashing the Image](/flashing).
+kernel and device tree. Flashing is on [Flashing the Image](/flashing).
 
 ## System baseline
 
@@ -93,32 +93,25 @@ Rockchip user-space libraries (MPP, RGA, NPU runtime) are already installed. Do
 not remove `libmpp*`, `librga*` or `librknnrt` — the multimedia and AI samples
 depend on them.
 
-## Device tree and overlays
+## Device tree
 
 The board device tree is loaded from `/boot/dtb/rockchip/`; the active one is
-symlinked as `/boot/dtb/rk-kernel.dtb`. Optional hardware — 40-pin functions,
-camera, display, fan — is enabled by overlays, and **the configuration file
-depends on which image family you booted**:
+symlinked as `/boot/dtb/rk-kernel.dtb`. Optional hardware — 40-pin functions
+(UART / I2C / SPI / PWM), the fan — is enabled in the DTS; cameras and panels
+are configured in the DTS as well (see [Camera](/camera),
+[Display Output](/display)).
 
-| Image family | Configuration file | Overlay directory | Syntax |
-|---|---|---|---|
-| TBoard SDK image | `/boot/uEnv/uEnv.txt` | `/boot/dtb/overlay/` | `dtoverlay=/dtb/overlay/<name>.dtbo`, one line each |
-| Armbian-based image | `/boot/armbianEnv.txt` | `/boot/dtb/rockchip/overlay/` | `overlays=<name> <name>` on one line |
-| Ubuntu-rockchip image | `/boot/firmware/ubuntEnv.txt` | `/boot/firmware/dtbs/rockchip/overlay/` | `overlays=<name> <name>` on one line |
+To enable an interface:
 
-Enable an overlay by removing the leading `#` (SDK image) or by adding its name
-to the `overlays=` list, then `sync` and reboot:
+1. Edit the board DTS under `kernel/arch/arm64/boot/dts/rockchip/` in the SDK:
+   enable the controller node and select the pin muxing via `pinctrl-0`;
+2. Rebuild the dtb (`make dtbs` in the SDK);
+3. Replace the matching file under `/boot/dtb/rockchip/` with the new dtb and
+   reboot.
 
-```bash
-sudo vi /boot/uEnv/uEnv.txt
-sync
-sudo reboot
-```
-
-Always `sync` before cutting power — an unsynchronised `uEnv.txt` can leave the
-board unbootable. The overlay names for each interface are listed on the
-interface pages (governed by the same rule: only one pin-mux variant per
-controller, e.g. `uart3-m1` **or** `uart3-m2`).
+The interface pages name the node and pin-mux variant for each controller
+(governed by the same rule: only one pin-mux variant per controller, e.g.
+`uart3-m1` **or** `uart3-m2`).
 
 ## Kernel updates
 

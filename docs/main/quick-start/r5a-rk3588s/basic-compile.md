@@ -7,48 +7,79 @@ slug: "/basic-compile"
 
 # Basic Compilation
 
-![cross-compile flow diagram placeholder 960 x 540 px](/img/placeholder-960x540.png)
+The TBoard root filesystem ships with a GCC toolchain, so you can compile
+C/C++ programs directly on the board; you can also connect over SSH with
+VSCode and edit, build, and debug from your PC. Cross-compiling on the PC
+(e.g. for components that go into the firmware image) works too.
 
-> Image placeholder: **960 × 540 px** (suggested use: build flow diagram).
-> Replace it later with a verified image of the same dimensions.
+## Option 1 — Compile on the board
 
-Cross-compile a small C program on your PC and run it on the R5A. SDK sources
-and ready-made firmware images are on the [Downloads](/downloads) page.
-
-## 1. Install the toolchain (PC)
+GCC is preinstalled. Verify the toolchain first:
 
 ```bash
-sudo apt install gcc-aarch64-linux-gnu
+gcc -v
 ```
 
-## 2. Build a test program (PC)
+Create a test program `hello.c`:
 
 ```c
 /* hello.c */
 #include <stdio.h>
-int main(void) { printf("Hello from TBoard R5A\n"); return 0; }
+int main(void)
+{
+    printf("Hello from TBoard R5A\n");
+    return 0;
+}
 ```
 
-```bash
-aarch64-linux-gnu-gcc -o hello hello.c
-file hello     # should report "ARM aarch64"
-```
-
-## 3. Copy and run (board)
+Build and run:
 
 ```bash
-scp hello <user>@<board-ip>:/home/<user>/
-# on the board:
+gcc hello.c -o hello
 ./hello
+# Hello from TBoard R5A
 ```
 
-## 4. Check the CPU at runtime
+## Option 2 — Remote development with VSCode over SSH
 
-The octa-core layout appears as three cpufreq policies (little / big clusters):
+1. Install [VSCode](https://code.visualstudio.com/) and the
+   **Remote - SSH** extension on your PC;
+2. Press `F1`, run *Remote-SSH: Connect to Host*, enter `tboard@<board-ip>`
+   (get the IP with `ip a` on the board), pick the platform and enter the
+   password on first connect;
+3. Once connected, *Open Folder* to open a working directory on the board and
+   edit code, build, and run in the integrated terminal.
+
+### Passwordless login (optional)
+
+Generate a key on the PC (run in cmd on Windows, press Enter through all
+prompts):
+
+```bat
+ssh-keygen -t rsa
+```
+
+Open `C:\Users\<you>\.ssh\id_rsa.pub` and copy its contents. On the board:
 
 ```bash
-lscpu
-cat /sys/devices/system/cpu/cpufreq/policy*/scaling_cur_freq
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+echo '<paste the public key>' >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+The next VSCode connection no longer asks for a password.
+
+## Option 3 — Cross-compiling on the PC
+
+For components that go into the firmware image or larger projects, use a
+cross toolchain on the PC:
+
+```bash
+sudo apt install gcc-aarch64-linux-gnu     # install the toolchain
+aarch64-linux-gnu-gcc -o hello hello.c     # build
+file hello                                 # should report "ARM aarch64"
+scp hello tboard@<board-ip>:/home/tboard/  # copy to the board
+./hello                                    # run on the board
 ```
 
 ## Related

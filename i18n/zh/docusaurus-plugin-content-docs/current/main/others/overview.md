@@ -126,9 +126,9 @@ echo V > /dev/watchdog        # 把控制权交回内核
 | 现象 | 优先检查 |
 |---|---|
 | 完全无输出 | 电源电压/电流，然后看 1500000 波特率的调试串口 |
-| 能进系统但没有显示 | `cat /sys/class/drm/*/status`，再看显示相关 overlay |
-| 接口不存在（`/dev/i2c-*`、`/dev/spidev*`） | `uEnv.txt` / `armbianEnv.txt` 中该接口的 overlay |
-| 改完 overlay 后外设无响应 | 引脚复用冲突——同一组引脚只能有一个功能 |
+| 能进系统但没有显示 | `cat /sys/class/drm/*/status`，再看显示相关的 DTS 配置 |
+| 接口不存在（`/dev/i2c-*`、`/dev/spidev*`） | 设备树中该接口是否启用，dtb 是否已替换 |
+| 改完设备树后外设无响应 | 引脚复用冲突——同一组引脚只能有一个功能 |
 | 负载高时重启 | 供电预算：USB 设备、风扇、Type-C 适配器规格 |
 | 识别不到 eMMC | `lsblk`、`dmesg \| grep mmc`，然后重插或重烧 |
 
@@ -137,7 +137,7 @@ echo V > /dev/watchdog        # 把控制权交回内核
 
 ## 相关页面
 
-- [Linux](/linux) — 账号、网络、overlay、内核。
+- [Linux](/linux) — 账号、网络、设备树、内核。
 - [UART 与串口](/uart-serial) — 用于恢复的控制台。
 - [GPIO](/gpio) / [I2C](/i2c) — 接口验证方法。
 - [TBoard R5A](/tboard-r5a) — 接口与规格。

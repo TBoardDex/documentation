@@ -7,11 +7,6 @@ slug: "/assembly"
 
 # Assembly & Connections
 
-![assembly steps photo placeholder 800 x 450 px](/img/placeholder-800x450.png)
-
-> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
-> screenshot). Replace it later with a verified image of the same dimensions.
-
 ## 1. Install cooling
 
 Attach the heatsink to the SoC. For sustained loads also mount the fan — the

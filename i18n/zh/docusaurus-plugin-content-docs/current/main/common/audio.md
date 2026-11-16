@@ -86,7 +86,7 @@ HDMI / DP 音频依附于显示：只有在显示器连接且该模式激活时�
 
 | 现象 | 检查 |
 |---|---|
-| 一个声卡都没有 | codec 的 overlay 未启用，或 `snd_soc` 模块未加载——`dmesg \| grep -i <codec>` |
+| 一个声卡都没有 | codec 未在设备树中启用，或 `snd_soc` 模块未加载——`dmesg \| grep -i <codec>` |
 | 耳机无声，HDMI 有声 | `alsamixer` 中 codec 声卡的静音状态与音量 |
 | 大音量破音 | 降低 `Playback Volume`，codec 比喇叭更早削顶 |
 | 只有单声道 | TRS/TRRS 插头类型，或单声道喇叭接线错误 |
@@ -95,4 +95,4 @@ HDMI / DP 音频依附于显示：只有在显示器连接且该模式激活时�
 ## 相关页面
 
 - [显示输出](/display) — HDMI / DP 音频 sink。
-- [Linux](/linux#设备树与-overlay) — 启用 codec 相关 overlay。
+- [Linux](/linux#设备树) — 设备树配置方法。

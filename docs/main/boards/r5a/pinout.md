@@ -62,4 +62,4 @@ type:
 
 - [GPIO Usage (R5A)](/r5a-gpio) — numbering tables and command examples.
 - [Overview](/tboard-r5a) — board connectors and specifications.
-- [Linux](/linux#device-tree-and-overlays) — device tree basics.
+- [Linux](/linux#device-tree) — device tree basics.

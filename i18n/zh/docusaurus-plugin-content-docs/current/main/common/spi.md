@@ -13,25 +13,18 @@ RK3588(S) 带有硬件 SPI 控制器，TBoard 板卡把它们引到 40-pin 排�
 
 ## 确认总线可用
 
-控制器需要由 overlay 启用并同时导出 `spidev`，否则引脚保持 GPIO 功能，也不会
-出现 `/dev/spidev*`：
-
-```bash
-ls /boot/dtb/overlay/ | grep spi             # TBoard SDK 镜像
-ls /boot/dtb/rockchip/overlay/ | grep spi    # Armbian 镜像
-```
-
-在 `/boot/uEnv/uEnv.txt`（SDK 镜像）或 `/boot/armbianEnv.txt` 的 `overlays=` 行
-中启用对应项，`sync` 后重启，再检查：
+控制器需要在设备树（DTS）中启用并挂上 `spidev` 子节点，否则引脚保持 GPIO 功能，
+也不会出现 `/dev/spidev*`。修改 SDK 中的板级 DTS：启用对应 spi 节点、通过
+`pinctrl-0` 选择引脚复用并添加 `spidev` 子节点，`make dtbs` 编译后替换
+`/boot/dtb/rockchip/` 下的 dtb，重启，再检查：
 
 ```bash
 ls /dev/spidev*
 # 例如：/dev/spidev0.0  /dev/spidev0.1
 ```
 
-`spidev0.0` 对应片选 0，`spidev0.1` 对应片选 1。如果只有一个节点，说明该
-overlay 只导出了一路片选——请改用声明两路的版本，或在 overlay 中再声明一个
-器件。
+`spidev0.0` 对应片选 0，`spidev0.1` 对应片选 1。如果只有一个节点，说明 DTS 中
+只声明了一路片选——请补上第二个 `spidev` 子节点或器件。
 
 ## 回环测试
 
@@ -66,10 +59,10 @@ spi.close()
 | 字长 | 默认 8 位，不少 ADC 使用 16 位或 32 位 |
 | 片选 | 低电平有效；部分器件要求片选跨传输保持（`spi-cs-high` / `cs_change`） |
 
-overlay 同时定义了片选数量和最高时钟。在用户态把速率提到 overlay 声明值以上，
-有些驱动会直接忽略——要改请在 overlay 中改。
+DTS 同时定义了片选数量和最高时钟。在用户态把速率提到 DTS 声明值以上，有些驱动
+会直接忽略——要改请在 DTS 中改。
 
 ## 相关页面
 
 - [I2C](/i2c) — 低速传感器总线。
-- [Linux](/linux#设备树与-overlay) — overlay 配置方法。
+- [Linux](/linux#设备树) — 设备树配置方法。

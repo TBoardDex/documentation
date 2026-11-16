@@ -659,3 +659,51 @@ body:has(.tb-hero) .tb-note { padding: 16px 18px; }
   .tb-search__resulttag { display: none; }
   .tb-search__footer { gap: 10px; }
 }
+
+/* ------------------------------------------------------- download cards */
+/* Two-up clickable cards used on download pages (GitHub / netdisk entry
+   points). Icons are inline SVG so they inherit the palette variables. */
+.tb-dlcards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 20px 0 26px;
+}
+.tb-dlcard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--tb-border);
+  border-radius: 14px;
+  background: var(--tb-surface);
+  color: var(--tb-ink);
+  text-decoration: none;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tb-dlcard:hover,
+.tb-dlcard:focus-visible {
+  border-color: var(--tb-cyan);
+  box-shadow: 0 10px 24px rgba(4, 50, 102, .12);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: var(--tb-ink);
+}
+.tb-dlcard__icon {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--tb-surface-alt);
+  color: var(--tb-navy-light);
+}
+.tb-dlcard__icon svg { width: 22px; height: 22px; }
+.tb-dlcard__body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.tb-dlcard__title { font-weight: 700; font-size: 1rem; line-height: 1.3; }
+.tb-dlcard__desc { font-size: .84rem; line-height: 1.45; color: var(--ifm-color-emphasis-600); }
+.tb-dlcard__arrow { margin-left: auto; color: var(--ifm-color-emphasis-500); font-size: 1.15rem; line-height: 1; }
+@media (max-width: 768px) {
+  .tb-dlcards { grid-template-columns: 1fr; }
+}

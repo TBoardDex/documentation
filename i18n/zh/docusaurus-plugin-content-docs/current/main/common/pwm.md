@@ -13,16 +13,10 @@ RK3588(S) 有多路硬件 PWM。哪些通道引到 40-pin 排针、分别在哪�
 
 ## 启用通道
 
-PWM 通道**默认关闭**。启用对应的 overlay：
-
-```bash
-ls /boot/dtb/overlay/ | grep pwm             # TBoard SDK 镜像
-ls /boot/dtb/rockchip/overlay/ | grep pwm    # Armbian 镜像
-```
-
-然后加入 `/boot/uEnv/uEnv.txt`（SDK 镜像）或 `/boot/armbianEnv.txt` 的
-`overlays=` 行，`sync` 后重启。已被板载功能占用的通道（风扇曲线、屏幕背光）
-不要重复申请；各板卡页面会标出哪些通道是空闲的。
+PWM 通道**默认关闭**。在板级 DTS 中启用对应的 pwm 节点（通过 `pinctrl-0` 选择
+引脚复用并声明通道数），`make dtbs` 编译后替换 `/boot/dtb/rockchip/` 下的 dtb
+并重启。已被板载功能占用的通道（风扇曲线、屏幕背光）不要重复申请；各板卡页面
+会标出哪些通道是空闲的。
 
 ## 使用 PWM
 
@@ -49,7 +43,7 @@ echo 1     > /sys/class/pwm/pwmchip2/pwm0/enable
 - `duty_cycle` 必须**小于** `period`，否则写入返回 `EINVAL`。先写 `period`。
 - `duty_cycle` 等于 `period` 时无法关闭通道；先把占空比调小，再往 `enable`
   写 `0`。
-- 芯片号与通道号取决于 overlay。请用 `ls -l /sys/class/pwm/` 与
+- 芯片号与通道号取决于设备树配置。请用 `ls -l /sys/class/pwm/` 与
   `cat .../npwm` 确认，不要假定就是 `pwmchip0`。
 
 ## 舵机与背光示例
@@ -67,4 +61,4 @@ echo 1     > /sys/class/pwm/pwmchip2/pwm0/enable
 
 - [GPIO](/gpio) — 同一引脚上的编号规则与控制方式。
 - [其他](/others) — 由热管理子系统驱动的风扇曲线。
-- [Linux](/linux#设备树与-overlay) — overlay 配置方法。
+- [Linux](/linux#设备树) — 设备树配置方法。

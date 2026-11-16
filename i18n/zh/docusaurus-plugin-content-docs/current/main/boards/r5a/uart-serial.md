@@ -58,4 +58,4 @@ dmesg | grep -i "ttyS\|uart"
 
 - [UART 与串口](/uart-serial) — 控制台细节、回环测试、应用程序用法。
 - [R5A 40-PIN 引脚定义](/r5a-pinout) — 完整排针引脚表。
-- [Linux](/linux#设备树与-overlay) — 设备树基础。
+- [Linux](/linux#设备树) — 设备树基础。

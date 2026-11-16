@@ -15,21 +15,26 @@ RK3588(S) 内置 ISP 与 MIPI CSI 输入。TBoard 板卡提供 CSI 连接器用�
 1. 断开板卡电源。
 2. 打开 CSI 连接器的 FFC 锁扣，按丝印标示的方向插入排线（金手指朝向要看清），
    再压回锁扣。
-3. 上电，启用镜像自带的摄像头 overlay（文件名以你的镜像版本与 sensor 为准），
+3. 上电。sensor 需要在设备树（DTS）中配置后才能使用，见下节。
+
+## 在 DTS 中启用摄像头
+
+sensor 通过修改 DTS（设备树源码）启用。板级 DTS 在 SDK 的
+`kernel/arch/arm64/boot/dts/rockchip/` 下（文件名以板卡为准）：
+
+1. 在板级 DTS 中添加 sensor 节点：声明驱动的 `compatible`、I2C 地址、
+   `clock-frequency`（模组晶振频率）与 CSI `data-lanes`（2-lane 模组写 2，
+   4-lane 模组写 4）；
+2. 把 sensor 挂到所接 CSI 连接器对应的 MIPI 端口上；
+3. 重新编译 dtb（SDK 内 `make dtbs`），替换 `/boot/dtb/rockchip/` 下的文件后
    重启。
 
-```bash
-ls /boot/dtb/overlay/ | grep -i camera            # TBoard SDK 镜像
-ls /boot/dtb/rockchip/overlay/ | grep -i camera   # Armbian 镜像
-```
-
-overlay 中声明了 sensor 节点、I2C 地址、时钟与 CSI lane 数量。lane 数不匹配是
-“能识别但出不了图”的常见原因：2-lane 模组配 4-lane overlay（或反之）会在
-stream-on 阶段失败。
+lane 数不匹配是“能识别但出不了图”的常见原因：2-lane 模组写成 4-lane（或反之）
+会在 stream-on 阶段失败。
 
 ## 确认摄像头已识别
 
-按你启用的 overlay 取得 sensor 名称，然后检查探测日志：
+按 DTS 中启用的 sensor 名称，然后检查探测日志：
 
 ```bash
 dmesg | grep -i <sensor名称>    # 驱动版本、检测到的芯片 ID
@@ -38,8 +43,8 @@ media-ctl -p -d /dev/media0     # 通路：sensor -> dphy -> rkcif -> rkisp
 ```
 
 正常的探测日志会给出 sensor 名称与 I2C 地址，例如
-`imx219 4-0010: Detected IMX219 sensor`。没有地址时，在 overlay 分配的 I2C 总线
-上执行 `i2cdetect -y <总线号>`——无响应说明供电、排线方向或 overlay 有问题。
+`imx219 4-0010: Detected IMX219 sensor`。没有地址时，在 DTS 分配的 I2C 总线
+上执行 `i2cdetect -y <总线号>`——无响应说明供电、排线方向或 DTS 配置有问题。
 
 ## 采集图像
 
@@ -74,15 +79,16 @@ ffmpeg -f rawvideo -pixel_format nv12 -video_size 1920x1080 -i frame.nv12 frame.
 ## 多摄像头
 
 RK3588 的 ISP 支持复用：单个 ISP 最多服务 4 路 sensor，分辨率相应下降（2 路
-→ 3840×2160，3–4 路 → 2560×1536）。每路摄像头需要各自的 overlay（对应各自的
-CSI 连接器）以及不同的 sensor I2C 地址——多数模组提供地址选择电阻正是为此。
+→ 3840×2160，3–4 路 → 2560×1536）。每路摄像头需要在 DTS 中各自启用（对应各自
+的 CSI 连接器），并使用不同的 sensor I2C 地址——多数模组提供地址选择电阻正是
+为此。
 
 ## 常见问题
 
 | 现象 | 检查 |
 |---|---|
-| 没有 `/dev/video*` 节点 | overlay 未启用，或探测失败——看 `dmesg` |
-| 探测报 `-ENODEV` / 无地址 | 排线方向、模组供电、overlay 选错 |
+| 没有 `/dev/video*` 节点 | DTS 中未配置 sensor，或探测失败——看 `dmesg` |
+| 探测报 `-ENODEV` / 无地址 | 排线方向、模组供电、DTS 配置错误 |
 | 有节点但 stream-on 超时 | lane 数不匹配，或 link 频率不被支持 |
 | 画面偏绿 / 偏紫 | 媒体通路中的 Bayer 顺序错误 |
 | 高分辨率丢帧 | 增加缓冲区或降低分辨率；`dmesg` 中查 `csi` 报错 |
@@ -90,4 +96,5 @@ CSI 连接器）以及不同的 sensor I2C 地址——多数模组提供地址�
 ## 相关页面
 
 - [显示输出](/display) — 预览视频流。
-- [Linux](/linux#设备树与-overlay) — overlay 配置方法。
+- [SDK 源码](/sdk-sources) — 内核与板级 DTS 所在仓库。
+- [Linux](/linux#设备树) — dtb 位置与替换方法。

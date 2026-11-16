@@ -25,8 +25,8 @@ slug: "/common"
 
 - 除特别说明外，电平均为 **3.3 V**。5 V 引脚在各板卡引脚定义中标出，SoC 引脚
   不耐 5 V。
-- 可选接口**默认关闭**，通过设备树 overlay 启用。配置文件取决于是哪一类镜像，
-  见 [Linux](/linux#设备树与-overlay)。
+- 可选接口**默认关闭**，需在设备树（DTS）中启用并重新编译 dtb，见
+  [Linux](/linux#设备树)。
 - 一个引脚同一时刻**只有一个功能**：启用 I2C、SPI、UART、PWM 或 CAN 后，该引脚
   就不再是普通 GPIO。
 - 命令示例默认使用 Debian / Ubuntu 镜像上的默认用户账号配合 `sudo`；Armbian

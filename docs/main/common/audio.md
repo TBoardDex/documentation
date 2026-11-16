@@ -94,7 +94,7 @@ connected and the mode is active.
 
 | Symptom | Check |
 |---|---|
-| No cards listed | Codec overlay missing, or `snd_soc` module not loaded — `dmesg \| grep -i <codec>` |
+| No cards listed | Codec not enabled in the device tree, or `snd_soc` module not loaded — `dmesg \| grep -i <codec>` |
 | Jack silent, HDMI works | `alsamixer` — mute state and volume of the codec card |
 | Distortion at high volume | Lower `Playback Volume`; the codec clips before the speaker does |
 | Only one channel | TRS/TRRS plug type, or a mono panel wiring mistake |
@@ -103,4 +103,4 @@ connected and the mode is active.
 ## Related
 
 - [Display Output](/display) — HDMI/DP audio sinks.
-- [Linux](/linux#device-tree-and-overlays) — enabling codec overlays.
+- [Linux](/linux#device-tree) — device tree configuration.

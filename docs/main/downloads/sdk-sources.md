@@ -20,7 +20,7 @@ split into several Git repositories that are fetched together with `repo`.
 | Repository | Contents |
 |---|---|
 | [`TBoardDex/manifests`](https://github.com/TBoardDex/manifests) | `repo` manifest, pins every repository to a revision |
-| [`TBoardDex/rockchip-kernel`](https://github.com/TBoardDex/rockchip-kernel) | Linux 5.10 / 6.1 vendor kernel, R5A device trees and overlays |
+| [`TBoardDex/rockchip-kernel`](https://github.com/TBoardDex/rockchip-kernel) | Linux 5.10 / 6.1 vendor kernel, R5A device trees |
 | [`TBoardDex/u-boot`](https://github.com/TBoardDex/u-boot) | U-Boot, TPL/SPL and the R5A board files |
 | `rkbin` (Rockchip) | DDR init, BL31 and loader binaries, pulled by the manifest |
 

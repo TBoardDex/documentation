@@ -14,7 +14,7 @@ slug: "/linux"
 
 TBoard 的 Linux 镜像是瑞芯微 BSP 构建：6.1 vendor 内核、Debian 或 Ubuntu 根文件
 系统，以及加入 R5A 板级支持的 U-Boot。本页只讲镜像**启动之后**的事情——账号、
-网络、软件包、内核与 overlay；烧录步骤见[烧录镜像](/flashing)。
+网络、软件包、内核与设备树；烧录步骤见[烧录镜像](/flashing)。
 
 ## 系统基线
 
@@ -87,29 +87,22 @@ sudo apt upgrade
 瑞芯微用户态库（MPP、RGA、NPU 运行时）已预装，请勿删除 `libmpp*`、`librga*`
 与 `librknnrt`，多媒体与 AI 示例都依赖它们。
 
-## 设备树与 overlay
+## 设备树
 
 板级设备树位于 `/boot/dtb/rockchip/`，当前生效的文件软链接为
-`/boot/dtb/rk-kernel.dtb`。40-pin 功能、摄像头、屏幕、风扇等可选硬件通过
-overlay 启用，而**配置文件取决于启动的是哪一类镜像**：
+`/boot/dtb/rk-kernel.dtb`。40-pin 功能复用（UART / I2C / SPI / PWM）、风扇等
+可选硬件在 DTS 中启用；摄像头与屏幕同样通过 DTS 配置（见
+[摄像头](/camera)、[显示输出](/display)）。
 
-| 镜像类型 | 配置文件 | overlay 目录 | 写法 |
-|---|---|---|---|
-| TBoard SDK 镜像 | `/boot/uEnv/uEnv.txt` | `/boot/dtb/overlay/` | `dtoverlay=/dtb/overlay/<名称>.dtbo`，一行一个 |
-| Armbian 镜像 | `/boot/armbianEnv.txt` | `/boot/dtb/rockchip/overlay/` | `overlays=<名称> <名称>`，写在一行 |
-| Ubuntu-rockchip 镜像 | `/boot/firmware/ubuntEnv.txt` | `/boot/firmware/dtbs/rockchip/overlay/` | `overlays=<名称> <名称>`，写在一行 |
+启用一个接口的流程：
 
-SDK 镜像去掉行首 `#`，其他镜像把名称加进 `overlays=`，然后 `sync` 并重启：
+1. 在 SDK 的 `kernel/arch/arm64/boot/dts/rockchip/` 下修改板级 DTS：启用对应
+   控制器节点，并通过 `pinctrl-0` 选择引脚复用；
+2. 重新编译 dtb（SDK 内 `make dtbs`）；
+3. 用新的 dtb 替换 `/boot/dtb/rockchip/` 下对应文件，重启。
 
-```bash
-sudo vi /boot/uEnv/uEnv.txt
-sync
-sudo reboot
-```
-
-断电前务必 `sync`——`uEnv.txt` 未同步会让板卡无法启动。各接口对应的 overlay
-名称列在接口页面中，规则是一致的：同一个控制器只能选一种引脚复用，例如
-`uart3-m1` **或** `uart3-m2`。
+各接口页会给出对应节点与引脚复用名称，规则是一致的：同一个控制器只能选一种
+引脚复用，例如 `uart3-m1` **或** `uart3-m2`。
 
 ## 内核升级
 

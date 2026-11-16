@@ -33,8 +33,8 @@ a desktop image, or start a compositor yourself.
 
 ## HDMI and DP
 
-These are enabled by default on boards that carry them and need no overlay. If
-a monitor stays black:
+These are enabled by default on boards that carry them. If a monitor stays
+black:
 
 1. `cat /sys/class/drm/*/status` — is it `connected`?
 2. Try another cable: 4K needs a High Speed / Premium certified cable.
@@ -56,16 +56,26 @@ a monitor stays black:
 3. Panel logic power and backlight may come from the 40-pin header (3.3 V and
    5 V are available there) or from the panel's own boost circuit. Check your
    panel's datasheet and your board's pinout before wiring.
-4. Enable the panel overlay that matches the panel resolution:
-   ```bash
-   ls /boot/dtb/overlay/ | grep -iE "dsi|panel|display"
-   ```
-   Add it to `/boot/uEnv/uEnv.txt` or `/boot/armbianEnv.txt`, `sync`, reboot.
+4. The panel output requires its timing and initialization sequence to be
+   configured in the device tree (DTS) first — see the next section.
 
-A panel with the wrong overlay shows a lit but black screen or a rolling image —
-both mean the timing or the initialization sequence does not match. Overlay
-names usually encode the resolution (for example `…-1200x1920-…`), so pick the
-file that matches your panel exactly.
+## Configure the panel in the DTS
+
+The board DTS lives in `kernel/arch/arm64/boot/dts/rockchip/` in the SDK (the
+exact file is board-specific):
+
+1. Add a panel node: the driver `compatible`, `width-mm` / `height-mm`, and the
+   display timing (`clock-frequency`, `hactive` / `vactive`, porches and sync
+   widths);
+2. Reference the panel from the DSI controller node and declare the lane count
+   and pixel format;
+3. If the panel logic power or backlight is supplied by the board, check the
+   matching regulator and backlight nodes;
+4. Rebuild the dtb (`make dtbs` in the SDK), replace the file under
+   `/boot/dtb/rockchip/`, and reboot.
+
+Mismatched timing or initialization shows up as a lit but black screen or a
+rolling image — compare the DTS timing values against the panel datasheet.
 
 ## Multi-display layout
 
@@ -92,4 +102,5 @@ differ between boards — list them with `xrandr --query` or
 ## Related
 
 - [Audio](/audio) — HDMI/DP audio routing.
-- [Linux](/linux#device-tree-and-overlays) — enabling panel overlays.
+- [SDK Sources](/sdk-sources) — kernel and board DTS repositories.
+- [Linux](/linux#device-tree) — dtb location and replacement.

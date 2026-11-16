@@ -41,18 +41,10 @@ the ground wire is missing.
 
 ## General-purpose UARTs
 
-General-purpose UARTs are **off by default** on most boards; they are enabled
-by a device-tree overlay. List the overlays that exist on your image rather
-than trusting a file name from a blog post — the name encodes the SoC, board
-and mux:
-
-```bash
-ls /boot/dtb/overlay/ | grep uart          # TBoard SDK image
-ls /boot/dtb/rockchip/overlay/ | grep uart # Armbian-based image
-```
-
-Enable the overlay in the configuration file of your image family (see
-[Linux](/linux#device-tree-and-overlays)), then `sync` and reboot.
+General-purpose UARTs are **off by default** on most boards; enable them in the
+device tree (DTS): edit the board DTS in the SDK, turn on the uart node and
+select the pin muxing via `pinctrl-0`, rebuild with `make dtbs`, replace the dtb
+under `/boot/dtb/rockchip/` and reboot (see [Linux](/linux#device-tree)).
 
 Device node numbers come from `aliases` in the board device tree, so confirm
 them instead of guessing:
@@ -82,10 +74,11 @@ Rockchip UARTs support up to 4 Mbaud but long jumper wires rarely do.
 `/dev/ttyS*` is a normal character device: `open()`, `termios` for the line
 settings, `read()` / `write()` for data. Prefer a library (Python `pyserial`,
 C++ `asio::serial_port`) so timeouts and partial reads are handled. If a port
-disappears after a reboot, the overlay is not applied — not a driver bug.
+disappears after a reboot, the device tree change was not applied — not a
+driver bug.
 
 ## Related
 
 - [First Boot](/first-boot) — using the console during first startup.
-- [Linux](/linux#device-tree-and-overlays) — enabling overlays.
+- [Linux](/linux#device-tree) — device tree configuration.
 - [GPIO](/gpio) — using the same pins as plain GPIO instead.

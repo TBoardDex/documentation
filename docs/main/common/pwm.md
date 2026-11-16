@@ -15,16 +15,11 @@ same pin.
 
 ## Enabling a channel
 
-PWM channels are **off by default**. Enable the matching overlay:
-
-```bash
-ls /boot/dtb/overlay/ | grep pwm             # TBoard SDK image
-ls /boot/dtb/rockchip/overlay/ | grep pwm    # Armbian-based image
-```
-
-Then add it to `/boot/uEnv/uEnv.txt` (SDK image) or to the `overlays=` line of
-`/boot/armbianEnv.txt`, `sync` and reboot. Channels already used by an onboard
-function (fan curve, panel backlight) must not be re-claimed; the board page
+PWM channels are **off by default**. Enable the matching pwm node in the board
+DTS (select the pin muxing via `pinctrl-0` and declare the channel count),
+rebuild with `make dtbs`, replace the dtb under `/boot/dtb/rockchip/` and
+reboot. Channels already used by an onboard function (fan curve, panel
+backlight) must not be re-claimed; the board page
 lists which channels are free.
 
 ## Using PWM
@@ -54,7 +49,7 @@ Rules that trip people up:
   `EINVAL`. Write `period` first.
 - A channel cannot be disabled while `duty_cycle` equals `period`; lower it
   first, then write `0` to `enable`.
-- Chip and channel numbers depend on the overlay. Confirm with
+- Chip and channel numbers depend on the device tree configuration. Confirm with
   `ls -l /sys/class/pwm/` and `cat .../npwm` instead of assuming `pwmchip0`.
 
 ## Servo and backlight examples
@@ -72,4 +67,4 @@ For a buzzer, the period sets the tone: 1 kHz → `period = 1000000` ns.
 
 - [GPIO](/gpio) — numbering rules and control on the same pins.
 - [Others](/others) — fan curves driven by the thermal subsystem.
-- [Linux](/linux#device-tree-and-overlays) — overlay configuration.
+- [Linux](/linux#device-tree) — device tree configuration.

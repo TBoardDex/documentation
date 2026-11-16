@@ -30,7 +30,7 @@ xrandr --query                      # X11：输出、模式、当前布局
 
 ## HDMI 与 DP
 
-带这两种输出的板卡默认开启，无需 overlay。显示器黑屏时按顺序排查：
+带这两种输出的板卡默认开启。显示器黑屏时按顺序排查：
 
 1. `cat /sys/class/drm/*/status` —— 状态是否为 `connected`？
 2. 换线：4K 需要 High Speed / Premium 认证线材。
@@ -45,15 +45,21 @@ xrandr --query                      # X11：输出、模式、当前布局
 2. 按丝印标示的方向插入 FFC（金手指朝向要看清），再压紧锁扣。
 3. 屏幕逻辑电源与背光可能来自 40-pin 排针（排针上有 3.3 V 与 5 V），也可能来自
    屏幕自带的升压电路。接线前请同时查阅屏幕规格书与对应板卡的引脚定义。
-4. 启用与屏幕分辨率匹配的 overlay：
-   ```bash
-   ls /boot/dtb/overlay/ | grep -iE "dsi|panel|display"
-   ```
-   加入 `/boot/uEnv/uEnv.txt` 或 `/boot/armbianEnv.txt`，`sync` 后重启。
+4. 屏幕需要先在设备树（DTS）中配置好时序与初始化序列才能出图，见下节。
 
-overlay 选错时典型现象是背光亮但黑屏，或画面滚动——都说明时序或初始化序列不
-匹配。overlay 文件名中通常包含分辨率（例如 `…-1200x1920-…`），请选与屏幕完全
-一致的那个。
+## 在 DTS 中配置屏幕
+
+板级 DTS 在 SDK 的 `kernel/arch/arm64/boot/dts/rockchip/` 下（文件名以板卡为准）：
+
+1. 添加 panel 节点：驱动的 `compatible`、`width-mm` / `height-mm` 以及显示时序
+   （`clock-frequency`、`hactive` / `vactive`、前后肩与同步宽度）；
+2. 在 DSI 控制器节点下引用该 panel，声明 lane 数与像素格式；
+3. 屏幕逻辑电源与背光若由板卡供给，同时确认对应的 regulator 与 backlight 节点；
+4. 重新编译 dtb（SDK 内 `make dtbs`），替换 `/boot/dtb/rockchip/` 下的文件后
+   重启。
+
+时序或初始化序列不匹配时，典型现象是背光亮但黑屏，或画面滚动——对照屏幕规格书
+逐项检查 DTS 中的时序参数。
 
 ## 多屏布局
 
@@ -79,4 +85,5 @@ xrandr --output DSI-1 --right-of HDMI-1 --mode 1200x1920
 ## 相关页面
 
 - [音频](/audio) — HDMI / DP 音频通路。
-- [Linux](/linux#设备树与-overlay) — 启用屏幕 overlay。
+- [SDK 源码](/sdk-sources) — 内核与板级 DTS 所在仓库。
+- [Linux](/linux#设备树) — dtb 位置与替换方法。

@@ -7,11 +7,6 @@ slug: "/first-boot"
 
 # First Boot
 
-![first boot serial console screenshot placeholder 800 x 450 px](/img/placeholder-800x450.png)
-
-> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
-> screenshot). Replace it later with a verified image of the same dimensions.
-
 ## Power on
 
 Connect the 5 V / 3 A adapter to the **PWR IN** Type-C port. The red power LED
@@ -23,6 +18,13 @@ while the image expands its root filesystem.
 
 ## Log in
 
+Default accounts :
+
+| Account | Password | Note |
+|---|---|---|
+| `tboard` | `tboard` | everyday user |
+| `root` | `root` | administrator |
+
 **With the debug serial console** : the debug
 UART is on 40-pin **Pin 8 (TX) / Pin 10 (RX)**, with GND on Pin 6. Use a 3.3 V
 USB-to-serial adapter and cross the data lines: the board's TX (Pin 8) goes to
@@ -31,20 +33,20 @@ GND to GND:
 
 <img src="/img/r5a-serial-wiring.png" alt="Debug serial wiring: GND RX TX" width="700" />
 
-Serial settings: **1500000 baud, 8 data bits, no parity, 1 stop bit**.
-
-Default accounts (change the passwords immediately after first login):
-
-| Account | Password | Note |
-|---|---|---|
-| `tboard` | `tboard` | everyday user |
-| `root` | `root` | administrator |
-
-After login you reach the TBoard welcome screen:
+Serial settings: **1500000 baud, 8 data bits, no parity, 1 stop bit**. A
+successful serial login lands on the TBoard welcome screen:
 
 <img src="/img/r5a-serial-login.png" alt="TBoard welcome screen after serial login" width="700" />
 
-**With a display**: the desktop session starts automatically; log in directly.
+**With a display**: wire up the Micro HDMI output as described in
+[Assembly · Connect display](/assembly#3-connect-display); the login screen
+appears on the monitor after power-up:
+
+<img src="/img/r5a-hdmi-login.png" alt="Login screen on the HDMI monitor" width="700" />
+
+Enter the password to reach the Debian desktop:
+
+<img src="/img/r5a-hdmi-desktop.png" alt="Debian desktop on the HDMI monitor" width="700" />
 
 ## First-boot checks
 

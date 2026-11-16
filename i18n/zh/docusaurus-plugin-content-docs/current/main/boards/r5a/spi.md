@@ -68,4 +68,4 @@ ls /dev/spidev*         # 完成后出现 spidev0.0（CS0）与 spidev0.1（CS1�
 
 - [SPI](/spi) — 回环测试、器件参数、排障。
 - [R5A 40-PIN 引脚定义](/r5a-pinout) — 完整排针引脚表。
-- [Linux](/linux#设备树与-overlay) — 设备树基础。
+- [Linux](/linux#设备树) — 设备树基础。

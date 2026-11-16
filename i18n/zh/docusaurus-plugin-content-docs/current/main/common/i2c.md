@@ -59,4 +59,4 @@ i2ctransfer -y 1 w1@0x48 0x00 r2 # 先写寄存器地址，再读 2 字节
 
 - [SPI](/spi) — 另一种常用低速总线。
 - [其他](/others) — RTC 校时。
-- [Linux](/linux#设备树与-overlay) — overlay 配置方法。
+- [Linux](/linux#设备树) — 设备树配置方法。

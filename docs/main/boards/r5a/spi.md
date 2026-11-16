@@ -70,4 +70,4 @@ ls /dev/spidev*         # spidev0.0 (CS0) and spidev0.1 (CS1) when done
 
 - [SPI](/spi) — loopback test, device settings, troubleshooting.
 - [40-PIN Pinout](/r5a-pinout) — complete header pin table.
-- [Linux](/linux#device-tree-and-overlays) — device tree basics.
+- [Linux](/linux#device-tree) — device tree basics.

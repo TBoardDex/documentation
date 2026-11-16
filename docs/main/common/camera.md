@@ -16,21 +16,29 @@ camera module family are board-specific — see your board's page under Boards.
 1. Power off the board.
 2. Lift the FFC latch on the CSI connector, insert the ribbon with contacts in
    the orientation shown on the silkscreen, and press the latch back.
-3. Boot and enable the camera overlay shipped with the TBoard image (the exact
-   overlay file name matches your image release and sensor), then reboot.
+3. Power up. The sensor has to be enabled in the device tree (DTS) first — see
+   the next section.
 
-```bash
-ls /boot/dtb/overlay/ | grep -i camera         # TBoard SDK image
-ls /boot/dtb/rockchip/overlay/ | grep -i camera   # Armbian-based image
-```
+## Enable the camera in the DTS
 
-The overlay declares the sensor node, its I2C address, the clock and the CSI
-data lanes. Lanes are the usual reason a module is detected but delivers no
-image: a 2-lane module in a 4-lane overlay (or the reverse) fails at stream-on.
+Enable the sensor by editing the DTS (device tree source). The board DTS lives
+in `kernel/arch/arm64/boot/dts/rockchip/` in the SDK (the exact file is
+board-specific):
+
+1. Add the sensor node to the board DTS: the driver `compatible` string, the I2C
+   address, `clock-frequency` (module oscillator) and the CSI `data-lanes`
+   (2 for a 2-lane module, 4 for a 4-lane module);
+2. Attach the sensor to the MIPI port that belongs to the CSI connector you
+   used;
+3. Rebuild the dtb (`make dtbs` in the SDK), replace the file under
+   `/boot/dtb/rockchip/`, and reboot.
+
+Lanes are the usual reason a module is detected but delivers no image: a 2-lane
+module configured as 4-lane (or the reverse) fails at stream-on.
 
 ## Verify the camera
 
-Take the sensor name from the overlay file you enabled, then check the probe:
+Take the sensor name from the DTS entry you added, then check the probe:
 
 ```bash
 dmesg | grep -i <sensor-name>   # driver version, detected chip ID
@@ -40,8 +48,8 @@ media-ctl -p -d /dev/media0     # pipeline: sensor -> csi2 dphy -> rkcif -> rkis
 
 A healthy probe log names the sensor and reports its I2C address, for example
 `imx219 4-0010: Detected IMX219 sensor`. If the address is missing, run
-`i2cdetect -y <bus>` on the bus the overlay assigns to the sensor — no response
-means power, ribbon orientation or the wrong overlay.
+`i2cdetect -y <bus>` on the bus the DTS assigns to the sensor — no response means
+power, ribbon orientation or a DTS misconfiguration.
 
 ## Capture
 
@@ -77,15 +85,16 @@ ffmpeg -f rawvideo -pixel_format nv12 -video_size 1920x1080 -i frame.nv12 frame.
 
 The RK3588 ISP supports multiplexing: a single ISP instance can serve up to four
 sensors, at reduced resolution (2 paths → 3840×2160, 3–4 paths → 2560×1536).
-Each camera needs its own overlay (one per CSI connector) and a distinct sensor
-I2C address — most modules offer an address strap for exactly this reason.
+Each camera must be enabled separately in the DTS (one entry per CSI connector)
+and needs a distinct sensor I2C address — most modules offer an address strap
+for exactly this reason.
 
 ## Troubleshooting
 
 | Symptom | Check |
 |---|---|
-| No `/dev/video*` node | Overlay not enabled, or probe failed — look at `dmesg` |
-| Probe fails with `-ENODEV` / no address | Ribbon orientation, module power, wrong overlay |
+| No `/dev/video*` node | Sensor not configured in the DTS, or probe failed — look at `dmesg` |
+| Probe fails with `-ENODEV` / no address | Ribbon orientation, module power, DTS misconfiguration |
 | Node exists, stream-on times out | Lane count mismatch or unsupported link frequency |
 | Green/purple image | Wrong Bayer order in the media pipeline |
 | Frames drop at high resolution | Increase buffers, or lower the resolution; check `dmesg` for `csi` errors |
@@ -93,4 +102,5 @@ I2C address — most modules offer an address strap for exactly this reason.
 ## Related
 
 - [Display Output](/display) — previewing the stream.
-- [Linux](/linux#device-tree-and-overlays) — overlay configuration.
+- [SDK Sources](/sdk-sources) — kernel and board DTS repositories.
+- [Linux](/linux#device-tree) — dtb location and replacement.

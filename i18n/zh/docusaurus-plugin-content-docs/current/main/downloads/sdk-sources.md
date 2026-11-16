@@ -20,7 +20,7 @@ TBoard SDK 是在瑞芯微 Linux BSP 基础上加入 R5A 板级支持后的完�
 | 仓库 | 内容 |
 |---|---|
 | [`TBoardDex/manifests`](https://github.com/TBoardDex/manifests) | `repo` manifest，锁定每个仓库的版本 |
-| [`TBoardDex/rockchip-kernel`](https://github.com/TBoardDex/rockchip-kernel) | Linux 5.10 / 6.1 vendor 内核、R5A 设备树与 overlay |
+| [`TBoardDex/rockchip-kernel`](https://github.com/TBoardDex/rockchip-kernel) | Linux 5.10 / 6.1 vendor 内核、R5A 设备树 |
 | [`TBoardDex/u-boot`](https://github.com/TBoardDex/u-boot) | U-Boot、TPL/SPL 与 R5A 板级文件 |
 | `rkbin`（瑞芯微） | DDR 初始化、BL31 与 loader 二进制，由 manifest 引入 |
 

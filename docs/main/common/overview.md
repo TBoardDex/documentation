@@ -27,9 +27,8 @@ and connectors — are documented on the page of your board under
 
 - Logic level is **3.3 V** unless a page says otherwise. Pins that carry 5 V are
   marked in the board pinout, and the SoC pins are not 5 V tolerant.
-- Optional interfaces are **off by default**; they are enabled by a device-tree
-  overlay. The configuration file depends on the image family — see
-  [Linux](/linux#device-tree-and-overlays).
+- Optional interfaces are **off by default**; enable them in the device tree
+  (DTS), rebuild the dtb and reboot — see [Linux](/linux#device-tree).
 - A pin carries **one function at a time**: enabling I2C, SPI, UART, PWM or CAN
   on a pin takes it away from plain GPIO.
 - Command examples assume the default `tboard` account with `sudo` on a Debian or

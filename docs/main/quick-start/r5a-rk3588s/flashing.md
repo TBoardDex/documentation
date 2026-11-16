@@ -7,11 +7,6 @@ slug: "/flashing"
 
 # Flashing the Image
 
-![flashing procedure screenshot placeholder 800 x 450 px](/img/placeholder-800x450.png)
-
-> Image placeholder: **800 × 450 px** (suggested use: procedure photo /
-> screenshot). Replace it later with a verified image of the same dimensions.
-
 Start from a verified `update.img` from the [Downloads](/downloads) page.
 
 ## Wiring and power-up

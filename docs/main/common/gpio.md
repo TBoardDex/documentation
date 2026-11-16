@@ -145,4 +145,4 @@ authoritative list, and the board's interface page shows how to enable the rest.
 - [PWM](/pwm) — PWM channel usage on the same pins.
 - [I2C](/i2c) · [SPI](/spi) · [UART & Serial](/uart-serial) — the muxed alternatives.
 - [GPIO Usage (R5A)](/r5a-gpio) — R5A pin assignment and safe-GPIO quick table.
-- [Linux](/linux#device-tree-and-overlays) — enabling and disabling functions.
+- [Linux](/linux#device-tree) — enabling and disabling functions.

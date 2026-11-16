@@ -36,16 +36,9 @@ Windows 下用 PuTTY / MobaXterm，参数相同。没有显示器时，串口可
 
 ## 通用 UART
 
-大多数板卡上通用 UART **默认关闭**，由设备树 overlay 启用。overlay 文件名以
-当前镜像中的实际文件为准——文件名编码了 SoC、板卡与复用编号：
-
-```bash
-ls /boot/dtb/overlay/ | grep uart          # TBoard SDK 镜像
-ls /boot/dtb/rockchip/overlay/ | grep uart # Armbian 镜像
-```
-
-在所属镜像类型的配置文件中启用（见 [Linux](/linux#设备树与-overlay)），然后
-`sync` 并重启。
+大多数板卡上通用 UART **默认关闭**，需在设备树（DTS）中启用：修改 SDK 中的板级
+DTS，打开对应 uart 节点并通过 `pinctrl-0` 选择引脚复用，`make dtbs` 编译后替换
+`/boot/dtb/rockchip/` 下的 dtb 并重启（见 [Linux](/linux#设备树)）。
 
 设备节点编号由板级设备树的 `aliases` 决定，请实际确认而不是猜：
 
@@ -73,10 +66,10 @@ printf 'hello\n' > /dev/ttyS1
 `/dev/ttyS*` 就是普通字符设备：`open()` 打开、`termios` 设置参数、`read()` /
 `write()` 收发。建议使用现成库（Python 的 `pyserial`、C++ 的
 `asio::serial_port`），超时与半包处理都已经做好。如果重启后设备节点消失，是
-overlay 没生效，而不是驱动有问题。
+设备树改动未生效，而不是驱动有问题。
 
 ## 相关页面
 
 - [首次启动](/first-boot) — 首次开机时使用串口。
-- [Linux](/linux#设备树与-overlay) — 启用 overlay。
+- [Linux](/linux#设备树) — 设备树配置方法。
 - [GPIO](/gpio) — 把同一引脚当普通 GPIO 使用。

@@ -7,11 +7,6 @@ slug: "/first-boot"
 
 # 首次开机
 
-![首次开机串口截图占位图 800 x 450 px](/img/placeholder-800x450.png)
-
-> 图片占位：**800 × 450 px**（建议用途：操作照片 / 截图）。后期请替换为
-> 相同尺寸的真实图片。
-
 ## 上电
 
 把 5 V / 3 A 适配器接到 **PWR IN** 的 Type-C 口。红色电源指示灯常亮表示供电
@@ -22,6 +17,13 @@ slug: "/first-boot"
 
 ## 登录系统
 
+默认账户：
+
+| 账户 | 密码 | 说明 |
+|---|---|---|
+| `tboard` | `tboard` | 普通用户 |
+| `root` | `root` | 超级管理员 |
+
 **用调试串口**：调试串口在 40-pin 排针的 **Pin 8（TX）/
 Pin 10（RX）**，GND 取 Pin 6。用 3.3 V USB 转 TTL 线连接，注意**收发交叉**：
 板子的 TX（Pin 8）接串口模块的 **RX**，板子的 RX（Pin 10）接串口模块的
@@ -29,20 +31,19 @@ Pin 10（RX）**，GND 取 Pin 6。用 3.3 V USB 转 TTL 线连接，注意**收
 
 <img src="/img/r5a-serial-wiring.png" alt="调试串口接线：GND RX TX" width="700" />
 
-串口参数：**1500000 波特率，数据位 8，无校验位，停止位 1**。
-
-默认账户（首次登录后请立即修改密码）：
-
-| 账户 | 密码 | 说明 |
-|---|---|---|
-| `tboard` | `tboard` | 普通用户 |
-| `root` | `root` | 超级管理员 |
-
-登录成功后进入 TBoard 欢迎界面：
+串口参数：**1500000 波特率，数据位 8，无校验位，停止位 1**。串口登录成功后
+进入 TBoard 欢迎界面：
 
 <img src="/img/r5a-serial-login.png" alt="串口登录成功后的 TBoard 欢迎界面" width="700" />
 
-**有显示器**：桌面会话自动启动，直接登录即可。
+**有显示器**：按[组装与连接 · 连接显示](/assembly#3-连接显示)接好 Micro HDMI
+输出，上电后显示器出现登录界面：
+
+<img src="/img/r5a-hdmi-login.png" alt="HDMI 显示器上的登录界面" width="700" />
+
+输入密码登录后进入 Debian 桌面：
+
+<img src="/img/r5a-hdmi-desktop.png" alt="HDMI 显示器上的 Debian 桌面" width="700" />
 
 ## 开机自检
 

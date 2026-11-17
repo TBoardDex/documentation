@@ -16,11 +16,16 @@ in the default image.
 | UART | Header pins | Device | State in the default image | Enable with |
 |---|---|---|---|---|
 | UART2 | 8 (TX) / 10 (RX) | `ttyFIQ0` | Debug console, always on | — |
-| UART6 (M1) | 16 (TX) / 18 (RX) | `/dev/ttyS2` | Enabled | — |
-| UART0 (M2) | 29 (TX) / 31 (RX) | assigned by `dmesg` | Disabled | device tree change (below) |
-| UART3 (M2) | 33 (TX) / 35 (RX) | assigned by `dmesg` | Disabled | device tree change (below) |
+| UART6 (M1) | 16 (TX) / 18 (RX) | `/dev/ttyS6` | Enabled | — |
+| UART0 (M2) | 29 (TX) / 31 (RX) | `/dev/ttyS0` once enabled | Disabled | device tree change (below) |
+| UART3 (M2) | 33 (TX) / 35 (RX) | `/dev/ttyS3` once enabled | Disabled | device tree change (below) |
 
 Console parameters: **1500000 baud, 8N1, no flow control**, 3.3 V TTL levels.
+The node number is deterministic, not "whatever `dmesg` says": the device tree
+declares `serialN` aliases, so `&uartN` always appears as `/dev/ttySN`
+(`serial6 = serial@feb90000` → `/dev/ttyS6`, `serial9 = serial@febc0000` →
+`/dev/ttyS9`). The stock image registers exactly three serial nodes:
+`/dev/ttyFIQ0` (debug console = UART2), `/dev/ttyS6` and `/dev/ttyS9`.
 
 More UARTs can be routed to the header by editing the device tree: UART4
 (TX 23 / RX 19, M2), UART7 (TX 26 / RX 24, M2, CTS on 40) and UART8

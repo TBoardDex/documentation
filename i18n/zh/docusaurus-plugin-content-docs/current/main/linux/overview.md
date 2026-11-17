@@ -89,17 +89,17 @@ sudo apt upgrade
 
 ## 设备树
 
-板级设备树位于 `/boot/dtb/rockchip/`，当前生效的文件软链接为
-`/boot/dtb/rk-kernel.dtb`。40-pin 功能复用（UART / I2C / SPI / PWM）、风扇等
-可选硬件在 DTS 中启用；摄像头与屏幕同样通过 DTS 配置（见
+设备树随内核一起编译，打包在 `boot.img` 内——板卡上没有独立的 dtb 目录，因此
+修改 DTS 必须经过重新编译内核并重新烧写。40-pin 功能复用（UART / I2C / SPI /
+PWM）、风扇等可选硬件在 DTS 中启用；摄像头与屏幕同样通过 DTS 配置（见
 [摄像头](/camera)、[显示输出](/display)）。
 
 启用一个接口的流程：
 
 1. 在 SDK 的 `kernel/arch/arm64/boot/dts/rockchip/` 下修改板级 DTS：启用对应
    控制器节点，并通过 `pinctrl-0` 选择引脚复用；
-2. 重新编译 dtb（SDK 内 `make dtbs`）；
-3. 用新的 dtb 替换 `/boot/dtb/rockchip/` 下对应文件，重启。
+2. 重新编译内核（SDK 内 `./build.sh kernel`）；
+3. 烧写新的 `boot.img`（见[烧录](/flashing)），重启。
 
 各接口页会给出对应节点与引脚复用名称，规则是一致的：同一个控制器只能选一种
 引脚复用，例如 `uart3-m1` **或** `uart3-m2`。
@@ -113,11 +113,11 @@ sudo apt upgrade
 sudo dpkg -i linux-image-*.deb linux-headers-*.deb
 sudo reboot
 
-# 2. 直接替换启动分区上的文件
-./build.sh kernel      # 在编译主机执行，再把 extboot.img / dtb 拷到板卡
+# 2. 从源码直接编译并重新烧写 boot 镜像
+./build.sh kernel      # 在编译主机执行，然后烧写新的 boot.img
 ```
 
-升级前请把旧内核与 `rk-kernel.dtb` 备份到其他分区或 SD 卡——新内核进不了用户态
+升级前请把旧的 `boot.img` 备份到其他分区或 SD 卡——新内核进不了用户态
 时，串口是唯一的恢复途径。
 
 ## 存储
@@ -127,8 +127,9 @@ lsblk                # 设备与分区
 df -h                # 各文件系统剩余空间
 ```
 
-根文件系统在首次启动时扩展到介质全部容量。默认镜像中 `/var/log` 是 zram 设备，
-好处是不磨损 eMMC，代价是重启后日志丢失；长期运行的设备请改为真实分区。
+根文件系统在首次启动时扩展到介质全部容量。`/var/log` 位于根文件系统上（无
+zram），长期大量写日志会磨损 eMMC；长期运行的设备请将其指向独立分区
+（如 `/userdata`）。
 
 ## 硬件加速
 

@@ -23,7 +23,7 @@ cat /proc/device-tree/model      # model string, from the device tree
 cat /proc/device-tree/compatible # "rockchip,rk3588s" plus the board compatible
 uname -a                         # kernel version and build date
 cat /etc/os-release              # distribution
-neofetch                         # one-screen summary
+neofetch                         # one-screen summary (not preinstalled: sudo apt install neofetch)
 ```
 
 Hardware revision and serial number are printed on the silkscreen. The
@@ -117,18 +117,50 @@ protection, not a fault.
 
 ## Watchdog
 
-```bash
-ls /dev/watchdog*
-echo 1 > /dev/watchdog        # start, kernel keeps kicking it
-echo V > /dev/watchdog        # hand control back to the kernel
+The stock image has **no watchdog device**. Verified on a bench TBoard R5A: `ls /dev/watchdog*` returns nothing, `/sys/class/watchdog` does
+not exist, and the board device tree has no `&wdt` node. The driver is compiled
+in — `snps,dw-wdt` is registered for `wdt: watchdog@feaf0000`
+(`CONFIG_DW_WATCHDOG=y`) — it is only switched off in the device tree.
+
+To enable it, add one node to `rk3588s-TBoard-R5A.dts`, rebuild the kernel and
+flash the new `boot.img`:
+
+```dts
+&wdt {
+    status = "okay";
+};
 ```
 
-Once the device is opened, the kernel pets it automatically; if you write
-anything other than `V` and then stop writing, the board reboots after the
-timeout (44 s in the default configuration). Use `systemd`'s
-`RuntimeWatchdogSec=` in `/etc/systemd/system.conf` for production devices
-instead of a hand-written kick script.
+```bash
+# on the SDK host
+./build.sh kernel                 # writes kernel/boot.img
+# on the PC, board in Loader / Maskrom mode
+upgrade_tool di -b boot.img       # or ./build.sh updateimg and flash the package
+```
 
+After the reboot `/dev/watchdog0` and `/sys/class/watchdog/watchdog0/` appear.
+The DesignWare watchdog starts with the driver default period; read the real
+value instead of assuming one:
+
+```bash
+cat /sys/class/watchdog/watchdog0/timeout
+cat /sys/class/watchdog/watchdog0/identity
+```
+
+Either drive it by hand (`echo 1 > /dev/watchdog0`, then keep writing inside
+the timeout; `V` hands control back to the kernel) or let systemd own it:
+
+```bash
+# /etc/systemd/system.conf
+RuntimeWatchdogSec=15
+ShutdownWatchdogSec=60
+```
+
+`systemctl daemon-reexec` applies that without a reboot. Without a kernel
+rebuild the only reset path is an external supervisor, for example a GPIO
+reset driven by an MCU.
+
+**Default image status: no watchdog.** A hung stock board cannot reset itself.
 ## First things to check when something fails
 
 | Symptom | Check first |
@@ -141,8 +173,7 @@ instead of a hand-written kick script.
 | eMMC not detected | `lsblk`, `dmesg \| grep mmc`, then re-seat or re-flash |
 
 Logs worth reading before changing anything: `dmesg -T | tail -50`,
-`journalctl -b -p err`, and `/var/log/syslog` (a zram device in the default
-image).
+`journalctl -b -p err`, and `/var/log/syslog` (on the eMMC root filesystem: `/dev/zram0` exists in the stock image but is used neither as swap nor as log storage).
 
 ## Related
 

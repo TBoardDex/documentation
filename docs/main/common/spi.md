@@ -17,8 +17,8 @@ Boards. Logic level is **3.3 V**.
 The controller must be enabled in the device tree (DTS) with a `spidev` child
 node; otherwise the pins stay GPIO and no `/dev/spidev*` node appears. Edit the
 board DTS in the SDK: enable the spi node, select the pin muxing via
-`pinctrl-0` and add a `spidev` child, rebuild with `make dtbs`, replace the dtb
-under `/boot/dtb/rockchip/`, reboot, then check:
+`pinctrl-0` and add a `spidev` child, rebuild the kernel with
+`./build.sh kernel`, flash the new `boot.img`, reboot, then check:
 
 ```bash
 ls /dev/spidev*

@@ -7,10 +7,7 @@ slug: "/quick-start"
 
 # R5A (RK3588S) Quick Start
 
-![TBoard R5A kit photo placeholder 1200 x 675 px](/img/placeholder-1200x675.png)
-
-> Image placeholder: **1200 × 675 px** (suggested use: kit contents photo).
-> Replace it later with a verified image of the same dimensions.
+![TBoard R5A quick start kit](/img/r5a-kit-hero.png)
 
 Take the TBoard R5A from box to first boot in four steps. The board runs on the
 Rockchip RK3588S (8-core CPU, Mali-G610 MP4 GPU, 6 TOPS NPU) — see the full
@@ -27,7 +24,7 @@ specifications on the [TBoard R5A](/tboard-r5a) page.
 > Replace it later with a verified image of the same dimensions.
 
 You will also need: a **5 V / 3 A USB Type-C** power adapter (board accepts
-5–23 V), a microSD card (≥ 32 GB) or eMMC module, a Micro-HDMI cable,
+5–23 V), a microSD card (≥ 16 GB) or eMMC module, a Micro-HDMI cable,
 and optionally a 3.3 V USB-to-serial adapter for the debug console.
 
 ## Four steps

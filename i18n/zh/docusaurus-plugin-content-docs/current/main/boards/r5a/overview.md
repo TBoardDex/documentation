@@ -7,10 +7,7 @@ slug: "/tboard-r5a"
 
 # TBoard R5A
 
-![TBoard R5A 板卡实拍占位图 1200 x 675 px](/img/placeholder-1200x675.png)
-
-> 图片占位：**1200 × 675 px**（建议用途：板卡俯拍 / 主图）。后期请替换为
-> 相同尺寸的真实图片。
+<img src="/img/r5a-hero.png" alt="TBoard R5A 主图：Rockchip RK3588S 单板计算机"/>
 
 ## 产品概述
 
@@ -33,12 +30,12 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 | 视频解码 | 8K@60 H.265/VP9/AVS2，8K@30 H.264，4K@60 AV1，1080P@60 MPEG-2/VC-1/VP8 |
 | 视频编码 | 8K@30 H.265 / H.264 |
 | 内存 | 2 / 4 / 8 / 16 / 32 GB，64 位 LPDDR4 / LPDDR4x |
-| 存储 | 16 / 32 / 64 / 128 GB eMMC 模块；板载 16 MB SPI Flash |
+| 存储 | 16 / 32 / 64 / 128 GB eMMC 模块 |
 | 无线 | Wi-Fi 6（802.11a/b/g/n/ac/ax），板载天线；蓝牙 5.2 |
-| 以太网 | 1× RJ45 网口 |
+| 以太网 | 1× RJ45 网口 —— Realtek RTL8111/8168（PCIe），系统内接口名为 `enP4p65s0` |
 | 视频输出 | 1× Micro HDMI（8Kp60），1× Mini DP（4Kp60） |
-| 摄像头 | 1× MIPI CSI（兼容 IMX219，最大 3280×2464） |
-| 显示 | 1× MIPI DSI（15-pin FFC，兼容树莓派规格 7 寸 800×480 屏幕） |
+| 摄像头 | 1× MIPI CSI（兼容 IMX219 模组）；默认设备树未启用任何摄像头 sensor |
+| 显示 | 1× MIPI DSI（15-pin FFC）；默认设备树无 panel 节点且背光已禁用 |
 | USB | 2× USB 3.0，2× USB 2.0，1× USB Type-C（仅供电） |
 | 音频 | ES8316 编解码器，3.5 mm 耳机接口（带麦克风） |
 | 40-pin 排针 | GPIO / UART / I2C / SPI / PWM / CAN（见 [40-PIN Pinout](/r5a-pinout)） |
@@ -70,7 +67,6 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 | 3.5 mm 耳机口 | 1 | 经 ES8316 输出耳机音频并输入麦克风。 |
 | microSD 卡槽 | 1 | 启动盘或扩展存储（支持 SDR104）。 |
 | eMMC 模块槽 | 1 | 16–128 GB 模块。 |
-| SPI Flash | — | 板载 16 MB（存放引导程序）。 |
 
 ## 内存与存储选配
 
@@ -100,13 +96,13 @@ HDMI、DP、USB 3.0、MIPI CSI/DSI、40-pin 排针等完整接口。
 排针上的 **Maskrom / Loader 引脚**可以实现与按键相同的效果：上电时把
 `Maskrom`（或 `Loader`）引脚短接到 GND。用按键更稳妥，不会误碰到相邻引脚。
 
-用户指示灯是标准的 LED class 设备：
+指示灯在系统中的类名为 `led1-r`（红灯，GPIO0_D0）与 `led2-g`（绿灯，GPIO0_C4），均来自板级 dts 的 `leds` 节点——请使用这两个准确名称：
 
 ```bash
 ls /sys/class/leds/
-echo 1 | sudo tee /sys/class/leds/led2-green-usr/brightness          # 点亮
-echo 0 | sudo tee /sys/class/leds/led2-green-usr/brightness          # 熄灭
-echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # 心跳闪烁
+echo 1 | sudo tee /sys/class/leds/led2-g/brightness          # 点亮
+echo 0 | sudo tee /sys/class/leds/led2-g/brightness          # 熄灭
+echo heartbeat | sudo tee /sys/class/leds/led2-g/trigger     # 心跳闪烁
 ```
 
 红灯亮而绿灯不亮，说明内核在运行、只是 LED trigger 为 `none`，不是硬件故障。
@@ -116,7 +112,7 @@ echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # 心跳闪
 | 版本 | 改动 |
 |---|---|
 | V1.0 | 首个量产版本 |
-| V1.1 | U27 / U7 / U6301 电源引脚调整；USB 走线调整（U15 改到 TypeC0，CN31 改为 USB 2.0）；40-pin 增加 UART 保护并改用 0.8 mm 连接器；CSI1 改到 I2C4 并去掉 R6352；Wi-Fi 模组更换为 AP6275P |
+| V1.1 | U27 / U7 / U6301 电源引脚调整；USB 走线调整（U15 改到 TypeC0，CN31 改为 USB 2.0）；40-pin 增加 UART 保护并改用 0.8 mm 连接器；CSI1 改到 I2C4 并去掉 R6352；Wi-Fi 模组更换为 AIC8800（SDIO 4-bit） |
 
 对照原理图测量前，先确认丝印上的版本号。完整改动列表见[硬件资料](/hardware-files)。
 
@@ -125,6 +121,24 @@ echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # 心跳闪
 R5A **优先从 eMMC 启动**，其次才是 microSD。卡槽里残留旧镜像的卡时请留意
 这一点。
 
+## 硬件实测说明
+
+以下数值来自一台 TBoard R5A（Debian 11 镜像）与板级设备树的实际
+读数，用于更正本页早前的描述：
+
+| 项目 | 硬件实际值 |
+|---|---|
+| SDK / U-Boot | SDK `rk3588_linux_release_v1.6.0`；U-Boot 2017.09 |
+| 以太网 | Realtek RTL8111/8168 走 PCIe（`r8168`，PCI ID `10ec:8168`），接口名 **`enP4p65s0`**，不是 `eth0` |
+| 无线 | **AIC8800**，4-bit SDIO @ 50 MHz（`wifi_chip_type = "aic8800"`，SDIO ID `5449:0145`）；蓝牙 5.2 走 `uart9m2` |
+| eMMC | `mmcblk0` 约 58.2 GiB 可用（64 GB 模组），HS400 |
+| 显示 | HDMI-A-1 `connected`、DP-1 `disconnected`；未添加 panel 节点前没有 DSI connector |
+| SPI | `&spi2` 上挂着 RK806 PMIC（`spi2.0`）；没有 `/dev/spidev*`；SPI0/3/4 均关闭 |
+| 摄像头 | 没有 CSI sensor 节点，也没有 `/dev/media*`，只有 VPU 节点 `/dev/video-dec0` 与 `/dev/video-enc0` |
+| 指示灯 | `led1-r`（红）与 `led2-g`（绿） |
+| RTC | `rtc0` = `rtc-hym8563 6-0051`；没有备份电池时时钟会回到 2021-01-01 |
+| 看门狗 | 默认设备树中不存在，见[其他](/others)页的看门狗小节 |
+| 根文件系统 | `rootfs` 是固定的 14 GiB 分区，首启只扩展 `userdata` |
 ## 相关页面
 
 - [快速上手](/quick-start) — 组装、下载、烧录、首次开机。

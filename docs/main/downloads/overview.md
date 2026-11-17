@@ -13,11 +13,11 @@ slug: "/downloads"
 > with a verified image of the same dimensions.
 
 Every TBoard resource for the R5A — system images, SDK sources, flashing tools and
-hardware design files — is published in two places:
+hardware design files — is published in the following places:
 
 | Location | Contents |
 |---|---|
-| [TBoard Drive](https://drive.google.com/drive/folders/1x2KOX1F4-DVyyV_9qfdH28PWIORcWH56) | Images, tools, hardware design files, chip datasheets, QC reports |
+| [Baidu Netdisk (百度网盘)](https://pan.baidu.com/s/1tFGvDcyhq7s8G1umw80iNw?pwd=qf5j) (share code `qf5j`) | Images, tools, hardware design files, chip datasheets, QC reports |
 | [TBoardDex on GitHub](https://github.com/TBoardDex) | SDK manifest, kernel and U-Boot sources |
 | [Forum](https://forum.tboard.org) | Release announcements and verified checksums |
 
@@ -102,6 +102,6 @@ verify before writing.
 ## Related
 
 - [Firmware Images](/firmware-images) — Debian / Ubuntu images for the R5A.
-- [Tools & Drivers](/tools) — RKDevTool, SDDiskTool, upgrade_tool.
+- [Tools & Drivers](/tools) — RKDevTool, upgrade_tool.
 - [SDK & Sources](/sdk-sources) — manifest, kernel, U-Boot.
 - [Hardware Files](/hardware-files) — schematic, DXF, 3D, BOM.

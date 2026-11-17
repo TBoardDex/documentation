@@ -38,8 +38,8 @@ Confirm the image:
 
 - **Board model**: TBoard R5A.
 
-For storage we recommend a **32 GB eMMC module** and a **microSD card**, with at
-least one of them installed.
+Use an eMMC module or a microSD card of at least **16 GB** (32 GB recommended) —
+at least one of them must be installed.
 
 ## Verify before flashing
 

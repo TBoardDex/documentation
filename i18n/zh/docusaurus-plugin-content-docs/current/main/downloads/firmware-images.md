@@ -19,12 +19,12 @@ R5A 的所有镜像都发布在 [TBoard 网盘](https://drive.google.com/drive/f
 
 | 系统 | 版本 | 内核 | 说明 |
 |---|---|---|---|
-| Debian 11 | 桌面版、服务器版 | 6.1.x（瑞芯微 BSP） | 无显示器的服务器、网关场景推荐 |
-| Ubuntu 22.04 LTS | 桌面版、服务器版 | 6.1.x（瑞芯微 BSP） | 需要较新用户态软件时推荐 |
+| Debian 11 | Xfce 桌面版 | 6.1.x（瑞芯微 BSP） | SDK 产出 `debian11-Xfce-<日期>`；无显示器的服务器、网关场景推荐 |
+| Ubuntu 22.04 LTS | GNOME 桌面版、服务器版 | 6.1.x（瑞芯微 BSP） | SDK 产出 `ubuntu22.04-GNOME-<日期>` 与 `ubuntu22.04-Server-<日期>` |
 | TBoard SDK 构建 | 视 SDK 支持的桌面 / 服务器配置 | 由 defconfig 决定 | 自行编译，见 [SDK 与源码](/sdk-sources) |
-| Armbian 构建 | 桌面版、服务器版 | 6.1.x vendor 内核 | 使用 `armbianEnv.txt` 配置生态的镜像 |
 
-每个目录的文件名或随附的 `*.txt` 说明中都会标注内核版本、桌面环境和构建日期，
+TBoard SDK 只产出以上三种 rootfs——发布集中不含 Armbian 变体。每个目录的文件名
+或随附的 `*.txt` 说明中都会标注内核版本、桌面环境和构建日期，
 下载前先看清楚：2 GB 内存的板卡跑桌面版可以，但体验会明显偏慢。
 
 ## 默认账号
@@ -54,9 +54,13 @@ microSD 镜像与 `update.img` 出自同一套源码，差别只在打包方式�
 
 ## 介质要求
 
-- **microSD**：**≥ 32 GB**，SDHC / SDXC。
-  虚标容量的卡会在首次启动扩容分区时失败——新卡先用 `f3` 或 `h2testw` 测一遍。
-- **eMMC**：镜像必须能装下；16 GB 模组放不下为 32 GB 模组构建的桌面镜像。
+- **microSD**：**≥ 16 GB**，SDHC / SDXC。`parameter-tboard.txt` 在可扩展的 `userdata`
+  分区之前固定占用约 14.2 GiB（其中 rootfs 14 GiB、boot 64 MiB、oem 128 MiB、
+  backup 32 MiB、misc 与 uboot 各 8 MiB），16 GB 卡能启动但 `userdata` 只剩几百 MiB，
+  条件允许就用 32 GB。虚标容量的卡会在首次启动扩容 `userdata` 时失败——新卡先用
+  `f3` 或 `h2testw` 测一遍。
+- **eMMC**：同理，**16 GB** 模组是最低要求；32 GB 及以上才能让扩容后的 `userdata`
+  有实际可用空间。
 - 启动顺序是 **eMMC 优先，其次 microSD**。验证刚烧好的 eMMC 前，请先拔掉旧卡。
 
 ## 烧录前检查
@@ -75,6 +79,6 @@ microSD 镜像与 `update.img` 出自同一套源码，差别只在打包方式�
 ## 相关页面
 
 - [资料下载](/downloads) — 资料索引与校验要求。
-- [工具与驱动](/tools) — RKDevTool、SDDiskTool、`upgrade_tool`。
+- [工具与驱动](/tools) — RKDevTool、`upgrade_tool`。
 - [烧录镜像](/flashing) — 写入与升级的完整步骤。
 - [首次启动](/first-boot) — 登录、串口与网络检查。

@@ -15,8 +15,8 @@ RK3588(S) 带有硬件 SPI 控制器，TBoard 板卡把它们引到 40-pin 排�
 
 控制器需要在设备树（DTS）中启用并挂上 `spidev` 子节点，否则引脚保持 GPIO 功能，
 也不会出现 `/dev/spidev*`。修改 SDK 中的板级 DTS：启用对应 spi 节点、通过
-`pinctrl-0` 选择引脚复用并添加 `spidev` 子节点，`make dtbs` 编译后替换
-`/boot/dtb/rockchip/` 下的 dtb，重启，再检查：
+`pinctrl-0` 选择引脚复用并添加 `spidev` 子节点，`./build.sh kernel` 重新编译
+内核，烧写新的 `boot.img`，重启，再检查：
 
 ```bash
 ls /dev/spidev*

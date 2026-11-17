@@ -16,13 +16,21 @@ The 3.5 mm jack carries an **ES8316** codec; HDMI and DP carry audio from the
 SoC. A typical image lists one card per path:
 
 ```text
-card 0: rockchipdp0   [rockchip-dp0]           device 0: spdif-hifi-0
-card 1: rockchipes8316[rockchip,es8316-codec]  device 0: fe470000.i2s-ES8316 HiFi
-card 2: rockchiphdmi0 [rockchip-hdmi0]         device 0: i2s-hifi-0
+ 0 [rockchipdp0    ]: rockchip-dp0    - rockchip-dp0
+                     rockchip-dp0
+ 1 [rockchiphdmi0  ]: rockchip-hdmi0  - rockchip-hdmi0
+                     rockchip-hdmi0
+ 2 [rockchipes8316c]: rockchip_es8316 - rockchip,es8316-codec
+                     rockchip,es8316-codec
 ```
 
-Card numbers are assigned at boot and can change — always read `aplay -l`
-instead of hard-coding an index.
+That order — DP0 = card 0, HDMI0 = card 1, ES8316 = card 2 — is what the stock
+device tree produces (read back with `cat /proc/asound/cards`). The PCM names
+are `00-00: rockchip-dp0 spdif-hifi-0`, `01-00: rockchip-hdmi0 i2s-hifi-0` and
+`02-00: dailink-multicodecs ES8316 HiFi-0`.
+Card numbers shift if you edit the device tree or plug in a USB sound card — always read `aplay -l`
+instead of hard-coding an index. On the stock device tree ES8316 is **card 2**; the
+examples below all use `plughw:2,0`.
 
 How the three paths map to the device tree (`rk3588s-TBoard-R5A.dts`):
 
@@ -39,9 +47,9 @@ handled on SARADC channel 3.
 ## Quick test
 
 ```bash
-alsamixer                       # card 1 = ES8316: unmute, raise volume
-speaker-test -D plughw:1,0 -c 2 -t wav
-aplay -D plughw:1,0 /usr/share/sounds/alsa/Front_Right.wav
+alsamixer -c 2                  # card 2 = ES8316: unmute, raise volume
+speaker-test -D plughw:2,0 -c 2 -t wav
+aplay -D plughw:2,0 /usr/share/sounds/alsa/Front_Right.wav
 ```
 
 Headset microphones need a **TRRS (4-pole)** plug; TRS plugs will not route the

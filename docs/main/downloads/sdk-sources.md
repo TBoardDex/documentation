@@ -28,86 +28,56 @@ Branches follow the kernel line: the manifest's `linux` branch is what the
 published images are built from. Do not mix kernel and U-Boot from different
 branches — device-tree bindings and the loader ABI are versioned together.
 
-## Build host
-
-| Item | Requirement |
-|---|---|
-| OS | Ubuntu 20.04 or 22.04, 64-bit (Windows hosts run the SDK in a VM or WSL2) |
-| Disk | 80 GB free for one build; 150 GB+ for several configurations or a ccache |
-| RAM | 8 GB minimum, 16 GB recommended for `-j8` kernel builds |
-| Network | Access to GitHub and to the Rockchip binary mirror |
-
-Install the usual build dependencies:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y git ssh make gcc g++ libssl-dev liblz4-tool \
-  expect expect-dev patchelf chrpath gawk texinfo diffstat binfmt-support \
-  qemu-user-static live-build bison flex fakeroot cmake gcc-multilib \
-  g++-multilib unzip device-tree-compiler ncurses-dev bzip2 bc \
-  python-is-python3 python3-pip python3-pyelftools dpkg-dev rsync
-```
-
-Install `repo` once and put it on `PATH`:
-
-```bash
-mkdir -p ~/bin
-curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-chmod a+x ~/bin/repo
-export PATH=~/bin:$PATH
-```
-
-## Fetch the source
-
-| Product | SDK Source |
-|---|---|
-| TBoard-R5A | [https://github.com/TBoardDex/tboard-manifest](https://github.com/TBoardDex/tboard-manifest) |
-
-```bash
-// Refer to the README.md of the manifest repository on GitHub for the actual instructions
-mkdir ~/tboard-sdk && cd ~/tboard-sdk
-repo init -u https://github.com/TBoardDex/manifests.git -b linux -m tboard_linux_generic.xml
-repo sync -c -j4 --no-tags
-```
-
-`-c` fetches only the current branch, `-j4` uses four parallel jobs — raise it
-on a fast link. The first sync is roughly 30 GB.
-
-Update later with:
-
-```bash
-cd ~/tboard-sdk
-repo sync -c -j4
-```
-
-To update only one repository (for example after local changes elsewhere):
-
-```bash
-cd kernel
-git pull
-```
-
 ## Build
 
+`./build.sh help` lists every target. The board configuration is chosen with
+`chip` (SoC + board defconfig); a bare `./build.sh` then builds everything:
+
 ```bash
 cd ~/tboard-sdk
-./build.sh chip        # choose the SoC (RK3588) and the board defconfig
-./build.sh            # U-Boot + kernel + rootfs + update.img
+./build.sh chip        # RK3588 + tboard-r5a_rk3588s_debian_xfce_defconfig
+./build.sh             # loader + U-Boot + kernel + rootfs + update.img
 ```
 
-The output lands in `rockdev/`; `rockdev/update.img` is the file you flash to
-eMMC with [RKDevTool](/tools).
+The three board defconfigs are:
 
-Build one component at a time when iterating:
+| Defconfig | Root filesystem |
+|---|---|
+| `tboard-r5a_rk3588s_debian_xfce_defconfig` | Debian 11 + Xfce (`RK_DEBIAN=y`, `RK_ROOTFS_HOSTNAME="TBoard-R5A"`) |
+| `tboard-r5a_rk3588s_ubuntu_gnome_defconfig` | Ubuntu 22.04 + GNOME |
+| `tboard-r5a_rk3588s_ubuntu_server_defconfig` | Ubuntu 22.04 server |
+
+Board facts live in that defconfig, not in the kernel tree:
+`RK_KERNEL_DTS_NAME="rk3588s-TBoard-R5A"`, `RK_UBOOT_CFG="rk3588-tboard-r5a"`,
+`RK_KERNEL_CFG_FRAGMENTS="rk3588s_tboard.config"`, `RK_WIFIBT_CHIP="AIC8800"`,
+`RK_USE_FIT_IMG=y`, `RK_PARAMETER="parameter-tboard.txt"`,
+`RK_ROOTFS_INSTALL_MODULES=y`. U-Boot is configured by a fragment,
+`u-boot/configs/rk3588-tboard-r5a.config`
+(`CONFIG_BASE_DEFCONFIG="rk3588_defconfig"`), applied on top of `rk3588_defconfig` —
+there is no standalone `rk3588-tboard-r5a_defconfig` file.
+
+Building one component at a time:
 
 | Command | Output |
 |---|---|
+| `./build.sh loader` | `rockdev/MiniLoaderAll.bin` (rk3588_spl_loader_v1.18.113.bin) |
 | `./build.sh uboot` | `u-boot/uboot.img` |
-| `./build.sh kernel` | `kernel/extboot.img` and the kernel `.deb` packages |
-| `./build.sh debian` / `./build.sh ubuntu` | Root filesystem image |
-| `./build.sh firmware` | Assembles partitions into `rockdev/` |
-| `./build.sh updateimg` | Packs `rockdev/update.img` |
+| `./build.sh kernel` | `kernel/boot.img`, `kernel/resource.img`, `kernel/zboot.img` — there is **no** `extboot.img` |
+| `./build.sh kernel-modules` | Kernel modules only, into the kernel output tree |
+| `./build.sh linux-headers` | The only kernel package emitted: `output/linux-headers/linux-headers-5.10-arm64_arm64.deb` (there is no `linux-image` deb) |
+| `./build.sh debian` / `./build.sh ubuntu` | Root filesystem images (Debian Xfce / Ubuntu GNOME) |
+| `./build.sh ubuntu-server`, `./build.sh ubuntu-desktop` | Explicit Ubuntu flavours |
+| `./build.sh firmware` | Copy partitions into `rockdev/` |
+| `./build.sh updateimg` | Pack `rockdev/update.img` |
 
+`rockdev/update.img` is the file you flash to eMMC with [RKDevTool](/tools). A
+kernel-only change needs just `./build.sh kernel` plus an image update of
+`boot` and `resource` — this is how the optional-hardware recipes on the board
+pages are applied.
+
+A complete tree is large: the reference checkout is ~118 GB (one kernel, one
+U-Boot, all rootfs flavours). Budget 150 GB if you build several flavours or
+keep `ccache`.
 ## Related
 
 - [Firmware Images](/firmware-images) — prebuilt images if you do not need to build.

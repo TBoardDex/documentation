@@ -12,17 +12,14 @@ slug: "/assembly"
 先把散热片贴到主芯片上；长时间高负载场景再装风扇——无风冷时 RK3588S 表面
 温度可能超过 60 °C。注意散热鳍片不要压住 40-pin 排针和摄像头 / 屏幕排线座。
 
-![散热安装照片占位图 800 x 450 px](/img/placeholder-800x450.png)
-
-> 图片占位：**800 × 450 px**（建议用途：散热片 / 风扇安装照片）。后期请替换为
-> 相同尺寸的真实图片。
+<img src="/img/r5a-heatsink-install.png" alt="散热安装三步：1 贴导热垫，2 装散热鳍片，3 安装风扇" width="700" />
 
 ## 2. 接入存储
 
-把 eMMC 模块插入模块槽，或把 microSD 卡（≥ 32 GB）插入卡槽。
+把 eMMC 模块插入模块槽，或把 microSD 卡（≥ 16 GB）插入卡槽。
 注意启动顺序：**优先 eMMC**，其次 microSD。
 
-![eMMC 模块与 microSD 卡槽位置（板卡背面）](/img/r5a-storage-install.png)
+<img src="/img/r5a-storage-install.png" alt="eMMC 模块与 microSD 卡槽位置（板卡背面）" width="700" />
 
 ## 3. 连接显示
 

@@ -7,10 +7,7 @@ slug: "/tboard-r5a"
 
 # TBoard R5A
 
-![TBoard R5A board photo placeholder 1200 x 675 px](/img/placeholder-1200x675.png)
-
-> Image placeholder: **1200 × 675 px** (suggested use: board top view / hero photo).
-> Replace it later with a verified image of the same dimensions.
+<img src="/img/r5a-hero.png" alt="TBoard R5A hero image: Rockchip RK3588S single-board computer" />
 
 ## Overview
 
@@ -34,12 +31,12 @@ gateways, robotics controllers, and general Linux development.
 | Video decode | 8K@60 H.265/VP9/AVS2, 8K@30 H.264, 4K@60 AV1, 1080P@60 MPEG-2/VC-1/VP8 |
 | Video encode | 8K@30 H.265 / H.264 |
 | RAM | 2 / 4 / 8 / 16 / 32 GB, 64-bit LPDDR4 / LPDDR4x |
-| Storage | 16 / 32 / 64 / 128 GB eMMC module; onboard 16 MB SPI Flash |
+| Storage | 16 / 32 / 64 / 128 GB eMMC module |
 | Wireless | Wi-Fi 6 (802.11a/b/g/n/ac/ax) with onboard antenna; Bluetooth 5.2 |
-| Ethernet | 1× RJ45 Ethernet port |
+| Ethernet | 1× RJ45 — Realtek RTL8111/8168 on PCIe; the interface is `enP4p65s0` |
 | Video out | 1× Micro HDMI (8Kp60), 1× Mini DP (4Kp60) |
-| Camera | 1× MIPI CSI (IMX219-compatible, max 3280×2464) |
-| Display | 1× MIPI DSI (15-pin FFC, Raspberry-Pi-style 7″ 800×480 panel supported) |
+| Camera | 1× MIPI CSI connector (IMX219-class modules); the stock device tree enables no sensor |
+| Display | 1× MIPI DSI connector (15-pin FFC); the stock device tree has no panel node and the backlight is disabled |
 | USB | 2× USB 3.0, 2× USB 2.0, 1× USB Type-C (power only) |
 | Audio | ES8316 codec, 3.5 mm headset jack (with mic) |
 | 40-pin header | GPIO / UART / I2C / SPI / PWM / CAN (see [40-PIN Pinout](/r5a-pinout)) |
@@ -71,7 +68,6 @@ gateways, robotics controllers, and general Linux development.
 | 3.5 mm jack | 1 | Headphone out + microphone in via ES8316. |
 | microSD slot | 1 | Boot device or extra storage (SDR104 capable). |
 | eMMC module slot | 1 | 16–128 GB modules. |
-| SPI Flash | — | 16 MB onboard (bootloader). |
 
 ## Memory and storage options
 
@@ -102,13 +98,13 @@ The Maskrom and Loader **pins** on the header achieve the same thing as the
 button: short the pin named `Maskrom` (or `Loader`) to GND while powering up. The
 button is the safer option because it cannot slip onto a neighbouring pin.
 
-The user LED is a normal LED-class device:
+The LED class names are `led1-r` (red, GPIO0_D0) and `led2-g` (green, GPIO0_C4), both from the `leds` node in the board dts — use those exact names:
 
 ```bash
 ls /sys/class/leds/
-echo 1 | sudo tee /sys/class/leds/led2-green-usr/brightness          # on
-echo 0 | sudo tee /sys/class/leds/led2-green-usr/brightness          # off
-echo heartbeat | sudo tee /sys/class/leds/led2-green-usr/trigger     # blink
+echo 1 | sudo tee /sys/class/leds/led2-g/brightness          # on
+echo 0 | sudo tee /sys/class/leds/led2-g/brightness          # off
+echo heartbeat | sudo tee /sys/class/leds/led2-g/trigger     # blink
 ```
 
 The green LED staying dark while the red one is lit means the kernel is running
@@ -119,7 +115,7 @@ but the LED trigger is set to `none` — it is not a hardware fault.
 | Revision | Changes |
 |---|---|
 | V1.0 | Initial release |
-| V1.1 | Power-rail pin changes on U27 / U7 / U6301; USB re-routing (U15 to TypeC0, CN31 to USB 2.0); 40-pin header gained UART protection and 0.8 mm connectors; CSI1 moved to I2C4, R6352 removed; Wi-Fi module changed to AP6275P |
+| V1.1 | Power-rail pin changes on U27 / U7 / U6301; USB re-routing (U15 to TypeC0, CN31 to USB 2.0); 40-pin header gained UART protection and 0.8 mm connectors; CSI1 moved to I2C4, R6352 removed; Wi-Fi module changed to AIC8800 (SDIO, 4-bit) |
 
 Check the silkscreen marking before comparing a measurement with the schematic.
 The full change list is in [Hardware Files](/hardware-files).
@@ -129,6 +125,24 @@ The full change list is in [Hardware Files](/hardware-files).
 The R5A boots from **eMMC first**, then microSD. Keep this in mind when a card
 with an old image is left inserted.
 
+## Verified against hardware
+
+The values below were read back from a TBoard R5A (Debian 11 image) and from the board device tree, and correct earlier revisions of this
+page:
+
+| Item | What the hardware reports |
+|---|---|
+| SDK / U-Boot | SDK `rk3588_linux_release_v1.6.0`; U-Boot 2017.09 |
+| Ethernet | Realtek RTL8111/8168 on PCIe (`r8168`, PCI ID `10ec:8168`); the interface is **`enP4p65s0`**, not `eth0` |
+| Wireless | **AIC8800** on 4-bit SDIO at 50 MHz (`wifi_chip_type = "aic8800"`, SDIO ID `5449:0145`); Bluetooth 5.2 over `uart9m2` |
+| eMMC | `mmcblk0` ≈ 58.2 GiB usable (64 GB module), HS400 |
+| Display | HDMI-A-1 `connected`, DP-1 `disconnected`; no DSI connector until a panel node is added |
+| SPI | `&spi2` hosts the RK806 PMIC (`spi2.0`); no `/dev/spidev*`; SPI0/3/4 disabled |
+| Camera | No CSI sensor node and no `/dev/media*`; only the VPU nodes `/dev/video-dec0` and `/dev/video-enc0` |
+| LEDs | `led1-r` (red) and `led2-g` (green) |
+| RTC | `rtc0` = `rtc-hym8563 6-0051`; without a backup cell the clock falls back to 2021-01-01 |
+| Watchdog | absent from the stock device tree — see [Others](/others) |
+| Root filesystem | `rootfs` is a fixed 14 GiB partition; only `userdata` grows on first boot |
 ## Related
 
 - [Quick Start](/quick-start) — assemble, download, flash, first boot.

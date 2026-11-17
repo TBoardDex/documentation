@@ -53,6 +53,11 @@ ifconfig                      # 以太网是否拿到 DHCP 地址
 ping -c3 docs.tboard.org      # 外网连通性
 ```
 
+以太网接口名为 **`enP4p65s0`**（PCIe 上的 Realtek RTL8111/8168），不是 `eth0`；
+NetworkManager 默认有线配置名为 "Wired connection 1"，手动拉起可用
+`nmcli con up "Wired connection 1"`。`ip a` 与 `nmcli dev status` 都能看到真实
+接口名。
+
 ## 无法启动时
 
 - 检查启动介质——eMMC 中无可引导系统时才会落到卡槽的 microSD。

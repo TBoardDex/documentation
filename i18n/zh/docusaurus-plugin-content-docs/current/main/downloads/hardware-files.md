@@ -12,8 +12,9 @@ slug: "/hardware-files"
 > 图片占位：**960 × 540 px**（建议用途：文档 / 图纸包总览）。后期请替换为
 > 相同尺寸的真实图片。
 
-R5A 的设计资料发布在 [TBoard 网盘](https://drive.google.com/drive/folders/1x2KOX1F4-DVyyV_9qfdH28PWIORcWH56)
-**硬件资料** 目录下的 R5A 产品文件夹中，是底板设计、外壳建模和维修的参考依据。
+R5A 的设计资料发布在[百度网盘](https://pan.baidu.com/s/1w4sRX5PMosKq4ssfkNhgXQ?pwd=ym3i)
+（提取码 `ym3i`）**硬件资料** 目录下的 R5A 产品文件夹中，是底板设计、外壳建模和
+维修的参考依据。
 
 ## 资料包内容
 
@@ -34,7 +35,7 @@ R5A 的设计资料发布在 [TBoard 网盘](https://drive.google.com/drive/fold
 | 版本 | 改动 |
 |---|---|
 | V1.0 | 首个量产版本 |
-| V1.1 | U27 / U7 / U6301 电源引脚调整；USB U15 由 TypeC1 改为 TypeC0，CN31 由 USB 3.0 改为 USB 2.0；40-pin 增加 UART 保护，J2 / CN2 / CN32 改为 0.8 mm 间距连接器；CSI1 的 I2C 由 I2C3 改为 I2C4 并去除 R6352；Wi-Fi 模组由 AP6275S 改为 AP6275P |
+| V1.1 | U27 / U7 / U6301 电源引脚调整；USB U15 由 TypeC1 改为 TypeC0，CN31 由 USB 3.0 改为 USB 2.0；40-pin 增加 UART 保护，J2 / CN2 / CN32 改为 0.8 mm 间距连接器；CSI1 的 I2C 由 I2C3 改为 I2C4 并去除 R6352；Wi-Fi 模组改为 AIC8800（SDIO 4-bit） |
 
 对照原理图测量前，先确认丝印上的版本号和 Wi-Fi 模组的丝印型号。旧版本的
 文档仍保留在同一目录，文件名中带有版本标识。

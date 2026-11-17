@@ -18,8 +18,23 @@ slug: "/r5a-usb"
 | USB 2.0 × 2 | Type-A，主机 | 键鼠、USB 转串口 |
 | USB-C | 供电输入 | **PWR IN**，5 V – 23 V |
 
-其中一个 USB 3.0 Type-A 口兼作**烧录 / OTG** 口：板卡处于 Maskrom 或 Loader
-模式时，用 A-to-A 线把它接到 PC 即可烧录。
+其中一个 USB 3.0 Type-A 口接在 SoC 的 OTG 控制器（`usbdrd_dwc3_0`）上，是
+**烧录口**：板卡处于 Maskrom 或 Loader 模式时，用 A-to-A 线把它接到 PC 即可烧录。
+
+运行中的系统里该控制器被配置为 **host**（`rk3588s-TBoard-R5A.dts` 中
+`dr_mode = "host"`，`peripheral` 那行被注释掉），因此这个口就是普通 Type-A
+主机口，不会出现设备（gadget）节点。要把它当 USB 设备用（gadget、RNDIS 网卡、
+ADB），需改节点后重新烧写：
+
+```dts
+&usbdrd_dwc3_0 {
+    dr_mode = "peripheral";     /* 默认值是 "host" */
+    status = "okay";
+};
+```
+
+烧录本身不依赖这个设置——Maskrom 由 SoC ROM 处理，Loader 由 U-Boot 处理，都发生
+在 Linux 启动之前。
 
 ## 供电
 

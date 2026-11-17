@@ -30,8 +30,8 @@ board-specific):
    (2 for a 2-lane module, 4 for a 4-lane module);
 2. Attach the sensor to the MIPI port that belongs to the CSI connector you
    used;
-3. Rebuild the dtb (`make dtbs` in the SDK), replace the file under
-   `/boot/dtb/rockchip/`, and reboot.
+3. Rebuild the kernel (`./build.sh kernel` in the SDK), flash the new
+   `boot.img` — the rebuilt device tree is packed inside — and reboot.
 
 Lanes are the usual reason a module is detected but delivers no image: a 2-lane
 module configured as 4-lane (or the reverse) fails at stream-on.

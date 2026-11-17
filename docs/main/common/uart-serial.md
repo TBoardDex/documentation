@@ -43,8 +43,9 @@ the ground wire is missing.
 
 General-purpose UARTs are **off by default** on most boards; enable them in the
 device tree (DTS): edit the board DTS in the SDK, turn on the uart node and
-select the pin muxing via `pinctrl-0`, rebuild with `make dtbs`, replace the dtb
-under `/boot/dtb/rockchip/` and reboot (see [Linux](/linux#device-tree)).
+select the pin muxing via `pinctrl-0`, rebuild the kernel with
+`./build.sh kernel`, flash the new `boot.img` and reboot (see
+[Linux](/linux#device-tree)).
 
 Device node numbers come from `aliases` in the board device tree, so confirm
 them instead of guessing:

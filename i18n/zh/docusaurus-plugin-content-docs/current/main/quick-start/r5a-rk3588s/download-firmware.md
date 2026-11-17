@@ -38,7 +38,7 @@ slug: "/download-firmware"
 
 - **硬件型号**：TBoard R5A。
 
-存储推荐 **32 GB eMMC** 与 **microSD 卡**，至少接入其中一个。
+存储最低要求 **16 GB**（推荐 32 GB）的 eMMC 或者 microSD 卡，至少接入其中一个。
 
 ## 烧录前校验
 

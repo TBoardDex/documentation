@@ -26,8 +26,8 @@ sensor 通过修改 DTS（设备树源码）启用。板级 DTS 在 SDK 的
    `clock-frequency`（模组晶振频率）与 CSI `data-lanes`（2-lane 模组写 2，
    4-lane 模组写 4）；
 2. 把 sensor 挂到所接 CSI 连接器对应的 MIPI 端口上；
-3. 重新编译 dtb（SDK 内 `make dtbs`），替换 `/boot/dtb/rockchip/` 下的文件后
-   重启。
+3. 重新编译内核（SDK 内 `./build.sh kernel`），烧写新的 `boot.img`（重新编译的
+   设备树已打包在内），重启。
 
 lane 数不匹配是“能识别但出不了图”的常见原因：2-lane 模组写成 4-lane（或反之）
 会在 stream-on 阶段失败。

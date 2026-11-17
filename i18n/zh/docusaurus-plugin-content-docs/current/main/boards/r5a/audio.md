@@ -16,12 +16,19 @@ slug: "/r5a-audio"
 各列一个声卡：
 
 ```text
-card 0: rockchipdp0   [rockchip-dp0]           device 0: spdif-hifi-0
-card 1: rockchipes8316[rockchip,es8316-codec]  device 0: fe470000.i2s-ES8316 HiFi
-card 2: rockchiphdmi0 [rockchip-hdmi0]         device 0: i2s-hifi-0
+ 0 [rockchipdp0    ]: rockchip-dp0    - rockchip-dp0
+                     rockchip-dp0
+ 1 [rockchiphdmi0  ]: rockchip-hdmi0  - rockchip-hdmi0
+                     rockchip-hdmi0
+ 2 [rockchipes8316c]: rockchip_es8316 - rockchip,es8316-codec
+                     rockchip,es8316-codec
 ```
 
-声卡编号在启动时分配、可能变化——请每次都读 `aplay -l`，不要写死在脚本里。
+这个顺序——DP0 = card 0、HDMI0 = card 1、ES8316 = card 2——就是默认设备树生成
+的结果（用 `cat /proc/asound/cards` 复核）。对应 PCM 名为
+`00-00: rockchip-dp0 spdif-hifi-0`、`01-00: rockchip-hdmi0 i2s-hifi-0` 与
+`02-00: dailink-multicodecs ES8316 HiFi-0`。
+若修改设备树或插入 USB 声卡，声卡编号会变化——请每次都读 `aplay -l`，不要写死在脚本里。默认设备树下 ES8316 是 **card 2**，下文示例统一用 `plughw:2,0`。
 
 三条链路在设备树（`rk3588s-TBoard-R5A.dts`）中的配置如下：
 
@@ -37,9 +44,9 @@ ES8316 挂在 I2C7（地址 `0x10`）；耳机麦克风走 codec 的 MIC2 通道
 ## 快速测试
 
 ```bash
-alsamixer                       # 声卡 1 = ES8316：取消静音、调音量
-speaker-test -D plughw:1,0 -c 2 -t wav
-aplay -D plughw:1,0 /usr/share/sounds/alsa/Front_Right.wav
+alsamixer -c 2                  # 声卡 2 = ES8316：取消静音、调音量
+speaker-test -D plughw:2,0 -c 2 -t wav
+aplay -D plughw:2,0 /usr/share/sounds/alsa/Front_Right.wav
 ```
 
 带麦克风的耳机需使用 **TRRS（四段）** 插头；三段 TRS 插头不会接通麦克风。

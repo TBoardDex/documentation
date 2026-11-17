@@ -12,11 +12,11 @@ slug: "/downloads"
 > 图片占位：**960 × 540 px**（建议用途：构建 / 下载流程图）。后期请替换为
 > 相同尺寸的真实图片。
 
-R5A 的系统镜像、SDK 源码、烧录工具和硬件设计资料统一发布在两个位置：
+TBoard 的系统镜像、SDK 源码、烧录工具和硬件设计资料统一发布在以下位置：
 
 | 位置 | 内容 |
 |---|---|
-| [TBoard 网盘](https://drive.google.com/drive/folders/1x2KOX1F4-DVyyV_9qfdH28PWIORcWH56) | 系统镜像、工具、硬件设计文件、芯片手册、质检报告 |
+| [百度网盘](https://pan.baidu.com/s/1tFGvDcyhq7s8G1umw80iNw?pwd=qf5j)（提取码 `qf5j`） | 系统镜像、工具、硬件设计文件、芯片手册、质检报告 |
 | [GitHub 上的 TBoardDex](https://github.com/TBoardDex) | SDK manifest、内核与 U-Boot 源码 |
 | [论坛](https://forum.tboard.org) | 版本发布公告与校验值 |
 
@@ -95,6 +95,6 @@ md5sum TBoard-R5A-debian11-Xfce-V1.0.0.img
 ## 相关页面
 
 - [固件与镜像](/firmware-images) — R5A 的 Debian / Ubuntu 镜像。
-- [工具与驱动](/tools) — RKDevTool、SDDiskTool、upgrade_tool。
+- [工具与驱动](/tools) — RKDevTool、upgrade_tool。
 - [SDK 与源码](/sdk-sources) — manifest、内核、U-Boot。
 - [硬件资料](/hardware-files) — 原理图、DXF、3D、BOM。

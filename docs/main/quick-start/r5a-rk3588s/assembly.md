@@ -13,17 +13,14 @@ Attach the heatsink to the SoC. For sustained loads also mount the fan — the
 RK3588S can exceed 60 °C without airflow. Keep the fins clear of the 40-pin
 header and camera/display ribbon connectors.
 
-![cooling installation photo placeholder 800 x 450 px](/img/placeholder-800x450.png)
-
-> Image placeholder: **800 × 450 px** (suggested use: heatsink / fan installation
-> photo). Replace it later with a verified image of the same dimensions.
+<img src="/img/r5a-heatsink-install.png" alt="Cooling install in three steps: 1 apply thermal pad, 2 mount the heatsink, 3 attach the fan" width="700" />
 
 ## 2. Connect storage
 
-Insert the eMMC module into its slot, or a microSD card (≥ 32 GB) into
+Insert the eMMC module into its slot, or a microSD card (≥ 16 GB) into
 the card slot. Note the boot order: **eMMC first**, then microSD.
 
-![eMMC module and microSD slot locations (board back)](/img/r5a-storage-install.png)
+<img src="/img/r5a-storage-install.png" alt="eMMC module and microSD slot locations (board back)" width="700" />
 
 ## 3. Connect display
 

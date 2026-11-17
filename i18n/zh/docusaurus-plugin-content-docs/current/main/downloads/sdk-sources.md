@@ -27,85 +27,54 @@ TBoard SDK 是在瑞芯微 Linux BSP 基础上加入 R5A 板级支持后的完�
 分支与内核主线对应：发布镜像所用的就是 manifest 的 `linux` 分支。内核与
 U-Boot 不要跨分支混用——设备树绑定和 loader 接口是配套演进的。
 
-## 编译主机
-
-| 项目 | 要求 |
-|---|---|
-| 系统 | Ubuntu 20.04 或 22.04，64 位（Windows 主机请在虚拟机或 WSL2 中编译） |
-| 磁盘 | 单次全量编译预留 80 GB；多配置或使用 ccache 建议 150 GB 以上 |
-| 内存 | 最低 8 GB，`-j8` 编译内核建议 16 GB |
-| 网络 | 可访问 GitHub 与瑞芯微二进制镜像 |
-
-安装常用编译依赖：
-
-```bash
-sudo apt-get update
-sudo apt-get install -y git ssh make gcc g++ libssl-dev liblz4-tool \
-  expect expect-dev patchelf chrpath gawk texinfo diffstat binfmt-support \
-  qemu-user-static live-build bison flex fakeroot cmake gcc-multilib \
-  g++-multilib unzip device-tree-compiler ncurses-dev bzip2 bc \
-  python-is-python3 python3-pip python3-pyelftools dpkg-dev rsync
-```
-
-安装 `repo` 并加入 `PATH`：
-
-```bash
-mkdir -p ~/bin
-curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
-chmod a+x ~/bin/repo
-export PATH=~/bin:$PATH
-```
-
-## 拉取源码
-
-| 产品 | SDK 源码 |
-|---|---|
-| TBoard-R5A | [https://github.com/TBoardDex/tboard-manifest](https://github.com/TBoardDex/tboard-manifest) |
-
-```bash
-// 实际以github仓库中manifest的README.md为准
-mkdir ~/tboard-sdk && cd ~/tboard-sdk
-repo init -u https://github.com/TBoardDex/manifests.git -b linux -m tboard_linux_generic.xml
-repo sync -c -j4 --no-tags
-```
-
-`-c` 只拉当前分支，`-j4` 为四个并行任务，网络好可以调高。首次同步约 30 GB。
-
-后续更新：
-
-```bash
-cd ~/tboard-sdk
-repo sync -c -j4
-```
-
-只更新单个仓库（例如其他地方有本地改动时）：
-
-```bash
-cd kernel
-git pull
-```
-
 ## 编译
 
+`./build.sh help` 会列出全部目标。先用 `chip` 选择 SoC 与板级 defconfig，再直接
+执行 `./build.sh` 完整编译：
+
 ```bash
 cd ~/tboard-sdk
-./build.sh chip        # 选择 SoC（RK3588）与板级 defconfig
-./build.sh            # U-Boot + 内核 + 根文件系统 + update.img
+./build.sh chip        # RK3588 + tboard-r5a_rk3588s_debian_xfce_defconfig
+./build.sh             # loader + U-Boot + 内核 + rootfs + update.img
 ```
 
-产物在 `rockdev/` 下，其中 `rockdev/update.img` 就是用
-[RKDevTool](/tools) 烧到 eMMC 的镜像。
+三个板级 defconfig：
 
-只改一部分时可以单独编译：
+| Defconfig | 根文件系统 |
+|---|---|
+| `tboard-r5a_rk3588s_debian_xfce_defconfig` | Debian 11 + Xfce（`RK_DEBIAN=y`，`RK_ROOTFS_HOSTNAME="TBoard-R5A"`） |
+| `tboard-r5a_rk3588s_ubuntu_gnome_defconfig` | Ubuntu 22.04 + GNOME |
+| `tboard-r5a_rk3588s_ubuntu_server_defconfig` | Ubuntu 22.04 服务器 |
+
+板级信息写在这个 defconfig 里，而不是内核树里：
+`RK_KERNEL_DTS_NAME="rk3588s-TBoard-R5A"`、`RK_UBOOT_CFG="rk3588-tboard-r5a"`、
+`RK_KERNEL_CFG_FRAGMENTS="rk3588s_tboard.config"`、`RK_WIFIBT_CHIP="AIC8800"`、
+`RK_USE_FIT_IMG=y`、`RK_PARAMETER="parameter-tboard.txt"`、
+`RK_ROOTFS_INSTALL_MODULES=y`。U-Boot 侧是一个片段文件
+`u-boot/configs/rk3588-tboard-r5a.config`
+（`CONFIG_BASE_DEFCONFIG="rk3588_defconfig"`），叠加在 `rk3588_defconfig` 上——
+不存在独立的 `rk3588-tboard-r5a_defconfig`。
+
+单组件编译：
 
 | 命令 | 产物 |
 |---|---|
+| `./build.sh loader` | `rockdev/MiniLoaderAll.bin`（rk3588_spl_loader_v1.18.113.bin） |
 | `./build.sh uboot` | `u-boot/uboot.img` |
-| `./build.sh kernel` | `kernel/extboot.img` 与内核 `.deb` 包 |
-| `./build.sh debian` / `./build.sh ubuntu` | 根文件系统镜像 |
-| `./build.sh firmware` | 汇总各分区到 `rockdev/` |
+| `./build.sh kernel` | `kernel/boot.img`、`kernel/resource.img`、`kernel/zboot.img` —— **没有** `extboot.img` |
+| `./build.sh kernel-modules` | 只编译内核模块，输出到内核输出目录 |
+| `./build.sh linux-headers` | SDK 唯一的内核包：`output/linux-headers/linux-headers-5.10-arm64_arm64.deb`（没有 `linux-image` 包） |
+| `./build.sh debian` / `./build.sh ubuntu` | 根文件系统镜像（Debian Xfce / Ubuntu GNOME） |
+| `./build.sh ubuntu-server`、`./build.sh ubuntu-desktop` | 单独指定 Ubuntu 版本 |
+| `./build.sh firmware` | 把各分区拷进 `rockdev/` |
 | `./build.sh updateimg` | 打包 `rockdev/update.img` |
 
+`rockdev/update.img` 就是用 [RKDevTool](/tools) 烧到 eMMC 的文件。只改内核时，
+`./build.sh kernel` 后更新 `boot` 与 `resource` 分区即可——板卡各页里的“可选硬件”
+方案都是这样落地的。
+
+整棵源码树很大：参考检出约 118 GB（一套内核、一套 U-Boot、全部 rootfs 版本）。
+若要编译多个版本或保留 `ccache`，请准备 150 GB。
 ## 相关页面
 
 - [固件与镜像](/firmware-images) — 不需要自行编译时直接下载。

@@ -52,9 +52,14 @@ Enter the password to reach the Debian desktop:
 
 ```bash
 uname -a                      # kernel version
-ifconfig                      # Ethernet got a DHCP address
+ifconfig                      # enP4p65s0 got a DHCP address (RTL8111/8168 on PCIe)
 ping -c3 docs.tboard.org      # outbound network
 ```
+
+The Ethernet interface is **`enP4p65s0`** (Realtek RTL8111/8168 on PCIe), not
+`eth0`; NetworkManager names the default wired profile "Wired connection 1", so
+`nmcli con up "Wired connection 1"` is the manual fallback. `ip a` and
+`nmcli dev status` both show the real name.
 
 ## If it does not boot
 

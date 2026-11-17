@@ -20,12 +20,13 @@ Pick the folder for your board, then the file that matches your board revision.
 
 | System | Variants | Kernel | Notes |
 |---|---|---|---|
-| Debian 11 | Desktop, server | 6.1.x (Rockchip BSP) | Recommended for headless servers and gateways |
-| Ubuntu 22.04 LTS | Desktop, server | 6.1.x (Rockchip BSP) | Recommended when you need a recent userspace |
+| Debian 11 | Xfce desktop | 6.1.x (Rockchip BSP) | The SDK produces `debian11-Xfce-<date>`; good for headless servers and gateways |
+| Ubuntu 22.04 LTS | GNOME desktop, server | 6.1.x (Rockchip BSP) | The SDK produces `ubuntu22.04-GNOME-<date>` and `ubuntu22.04-Server-<date>` |
 | TBoard SDK build | Any desktop / server the SDK supports | Selected by the defconfig | Build it yourself, see [SDK & Sources](/sdk-sources) |
-| Armbian-based | Desktop, server | 6.1.x vendor kernel | Community-style image with `armbianEnv.txt` configuration |
 
-Each folder lists the kernel version, desktop environment and build date in the
+Only these three rootfs flavours are produced by the TBoard SDK — there is no
+Armbian variant in the release set. Each folder lists the kernel version,
+desktop environment and build date in the
 file name or the accompanying `*.txt` note. Read it before downloading: a
 desktop image on a 2 GB board is possible but slow.
 
@@ -57,10 +58,14 @@ differ in packaging, not in features. Flashing steps are described in
 
 ## Media requirements
 
-- **microSD**: **32 GB minimum**, SDHC/SDXC. Cards that report fake capacity fail during
-  first-boot rootfs expansion — test new cards with `f3` or `h2testw`.
-- **eMMC**: the image must fit the module; a 16 GB module cannot hold a desktop
-  image built for a 32 GB module.
+- **microSD**: **16 GB minimum**, SDHC/SDXC. `parameter-tboard.txt` reserves about
+  14.2 GiB before the growing `userdata` partition (rootfs alone is 14 GiB, boot 64 MiB,
+  oem 128 MiB, backup 32 MiB, misc and uboot 8 MiB each), so a 16 GB card boots
+  but leaves only a few hundred MiB for userdata — use 32 GB when you can. Cards that
+  report fake capacity fail during first-boot `userdata` expansion; test new cards with
+  `f3` or `h2testw`.
+- **eMMC**: a **16 GB** module is the minimum for the same reason; 32 GB or larger
+  gives the grown `userdata` partition useful room.
 - The board boots **eMMC first, then microSD**. Remove any old card before
   testing a freshly flashed eMMC.
 
@@ -83,6 +88,6 @@ different dates.
 ## Related
 
 - [Downloads](/downloads) — resource index and checksum policy.
-- [Tools & Drivers](/tools) — RKDevTool, SDDiskTool, `upgrade_tool`.
+- [Tools & Drivers](/tools) — RKDevTool, `upgrade_tool`.
 - [Flashing the Image](/flashing) — step-by-step write and upgrade.
 - [First Boot](/first-boot) — login, console and network checks.

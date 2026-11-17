@@ -17,7 +17,7 @@ same pin.
 
 PWM channels are **off by default**. Enable the matching pwm node in the board
 DTS (select the pin muxing via `pinctrl-0` and declare the channel count),
-rebuild with `make dtbs`, replace the dtb under `/boot/dtb/rockchip/` and
+rebuild the kernel with `./build.sh kernel`, flash the new `boot.img` and
 reboot. Channels already used by an onboard function (fan curve, panel
 backlight) must not be re-claimed; the board page
 lists which channels are free.

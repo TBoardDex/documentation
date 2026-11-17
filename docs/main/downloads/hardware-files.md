@@ -12,10 +12,11 @@ slug: "/hardware-files"
 > Image placeholder: **960 × 540 px** (suggested use: document / drawing package overview). Replace it later
 > with a verified image of the same dimensions.
 
-The R5A design package is published in the **Hardware information** section of
-the [TBoard Drive](https://drive.google.com/drive/folders/1x2KOX1F4-DVyyV_9qfdH28PWIORcWH56),
-under the R5A product folder. It is the reference for carrier boards, enclosures
-and repair work.
+The R5A design package is published on
+[Baidu Netdisk (百度网盘)](https://pan.baidu.com/s/1w4sRX5PMosKq4ssfkNhgXQ?pwd=ym3i)
+(share code `ym3i`), in the **Hardware information** section under the R5A
+product folder. It is the reference for carrier boards, enclosures and repair
+work.
 
 ## What the package contains
 
@@ -37,7 +38,7 @@ only covers the downloadable documents.
 | Revision | Changes |
 |---|---|
 | V1.0 | Initial release |
-| V1.1 | Voltage-regulator pins of U27 / U7 / U6301 changed; USB U15 moved from TypeC1 to TypeC0 and CN31 changed from USB 3.0 to USB 2.0; 40-pin header gained UART protection and J2 / CN2 / CN32 moved to a 0.8 mm pitch connector; CSI1 moved from I2C3 to I2C4 and R6352 was removed; Wi-Fi module changed from AP6275S to AP6275P |
+| V1.1 | Voltage-regulator pins of U27 / U7 / U6301 changed; USB U15 moved from TypeC1 to TypeC0 and CN31 changed from USB 3.0 to USB 2.0; 40-pin header gained UART protection and J2 / CN2 / CN32 moved to a 0.8 mm pitch connector; CSI1 moved from I2C3 to I2C4 and R6352 was removed; Wi-Fi module changed to AIC8800 (SDIO, 4-bit) |
 
 Check the revision printed on the silkscreen (and the Wi-Fi module marking)
 before comparing a measurement with a schematic. Documents for an older

@@ -7,10 +7,7 @@ slug: "/quick-start"
 
 # R5A（RK3588S）快速上手
 
-![TBoard R5A 套件照片占位图 1200 x 675 px](/img/placeholder-1200x675.png)
-
-> 图片占位：**1200 × 675 px**（建议用途：套装内容照片）。后期请替换为
-> 相同尺寸的真实图片。
+<img src="/img/r5a-kit-hero.png" alt="TBoard R5A 开箱清单：板卡、散热片与风扇套件" />
 
 四个步骤，把 TBoard R5A 从开箱带到首次开机。板卡基于 Rockchip RK3588S
 （8 核 CPU、Mali-G610 MP4 GPU、6 TOPS NPU）——完整规格见
@@ -27,7 +24,7 @@ slug: "/quick-start"
 > 相同尺寸的真实图片。
 
 还需要自备：**5 V / 3 A USB Type-C** 电源适配器（板卡支持 5–23 V 宽输入）、
-microSD 卡（≥ 32 GB）或 eMMC 模块、Micro HDMI 线，以及可选的
+microSD 卡（≥ 16 GB）或 eMMC 模块、Micro HDMI 线，以及可选的
 3.3 V USB 转 TTL 串口线（调试串口）。
 
 ## 四步上手

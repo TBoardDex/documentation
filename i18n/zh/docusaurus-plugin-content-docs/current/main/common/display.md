@@ -55,8 +55,8 @@ xrandr --query                      # X11：输出、模式、当前布局
    （`clock-frequency`、`hactive` / `vactive`、前后肩与同步宽度）；
 2. 在 DSI 控制器节点下引用该 panel，声明 lane 数与像素格式；
 3. 屏幕逻辑电源与背光若由板卡供给，同时确认对应的 regulator 与 backlight 节点；
-4. 重新编译 dtb（SDK 内 `make dtbs`），替换 `/boot/dtb/rockchip/` 下的文件后
-   重启。
+4. 重新编译内核（SDK 内 `./build.sh kernel`），烧写新的 `boot.img`（重新编译的
+   设备树已打包在内），重启。
 
 时序或初始化序列不匹配时，典型现象是背光亮但黑屏，或画面滚动——对照屏幕规格书
 逐项检查 DTS 中的时序参数。

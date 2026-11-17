@@ -22,7 +22,7 @@ cat /proc/device-tree/model      # 设备树中的型号字符串
 cat /proc/device-tree/compatible # "rockchip,rk3588s" 与板级兼容字符串
 uname -a                         # 内核版本与构建日期
 cat /etc/os-release              # 发行版
-neofetch                         # 一屏概览
+neofetch                         # 一屏概览（未预装：sudo apt install neofetch）
 ```
 
 硬件版本与序列号印在丝印上，版本号很关键：V1.1 把 CSI1 的 I2C 从 I2C3 改到了
@@ -111,16 +111,41 @@ stress --cpu 8 --timeout 60                  # 压测时观察风扇
 
 ## 看门狗
 
-```bash
-ls /dev/watchdog*
-echo 1 > /dev/watchdog        # 启动，内核自动喂狗
-echo V > /dev/watchdog        # 把控制权交回内核
+默认镜像**没有看门狗设备**。在实测的 TBoard R5A 上：`ls /dev/watchdog*` 无输出，`/sys/class/watchdog` 不存在，板级设备树中也没有 `&wdt` 节点。驱动本身已编译进内核——`snps,dw-wdt` 已注册到 `wdt: watchdog@feaf0000`（`CONFIG_DW_WATCHDOG=y`）——只是设备树里被关闭。
+
+启用方法：在 `rk3588s-TBoard-R5A.dts` 中补一个节点，重新编译内核并烧写新的 `boot.img`：
+
+```dts
+&wdt {
+    status = "okay";
+};
 ```
 
-设备一旦被打开，内核会自动喂狗；如果写入的不是 `V` 又停止喂狗，超时后（默认
-配置 44 秒）板卡会重启。量产设备建议用 `/etc/systemd/system.conf` 中的
-`RuntimeWatchdogSec=`，而不是自己写喂狗脚本。
+```bash
+# SDK 主机
+./build.sh kernel                 # 生成 kernel/boot.img
+# PC 端，板卡处于 Loader / Maskrom 模式
+upgrade_tool di -b boot.img       # 或 ./build.sh updateimg 整包烧写
+```
 
+重启后会出现 `/dev/watchdog0` 与 `/sys/class/watchdog/watchdog0/`。DesignWare 看门狗按驱动的默认周期启动，请直接读取实际值，不要假设：
+
+```bash
+cat /sys/class/watchdog/watchdog0/timeout
+cat /sys/class/watchdog/watchdog0/identity
+```
+
+可以手动驱动（`echo 1 > /dev/watchdog0` 后必须在超时内持续写入，写 `V` 交回内核），也可以交给 systemd：
+
+```bash
+# /etc/systemd/system.conf
+RuntimeWatchdogSec=15
+ShutdownWatchdogSec=60
+```
+
+`systemctl daemon-reexec` 即可生效，无需重启。若不重新编译内核，唯一的复位途径是外部监控，例如由 MCU 通过 GPIO 强行复位。
+
+**默认镜像状态：无看门狗**，板卡死机后无法自行复位。
 ## 出问题时先查这些
 
 | 现象 | 优先检查 |
@@ -133,7 +158,7 @@ echo V > /dev/watchdog        # 把控制权交回内核
 | 识别不到 eMMC | `lsblk`、`dmesg \| grep mmc`，然后重插或重烧 |
 
 动手修改前值得先看的日志：`dmesg -T | tail -50`、`journalctl -b -p err`，以及
-`/var/log/syslog`（默认镜像中为 zram 设备）。
+`/var/log/syslog`（位于 eMMC 根分区：默认镜像里 `/dev/zram0` 存在，但既没有做 swap，也没有承载日志）。
 
 ## 相关页面
 

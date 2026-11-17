@@ -95,8 +95,9 @@ depend on them.
 
 ## Device tree
 
-The board device tree is loaded from `/boot/dtb/rockchip/`; the active one is
-symlinked as `/boot/dtb/rk-kernel.dtb`. Optional hardware — 40-pin functions
+The device tree is compiled into the kernel and shipped inside `boot.img` —
+there is no standalone dtb directory on the board, so DTS changes always go
+through a kernel rebuild and a reflash. Optional hardware — 40-pin functions
 (UART / I2C / SPI / PWM), the fan — is enabled in the DTS; cameras and panels
 are configured in the DTS as well (see [Camera](/camera),
 [Display Output](/display)).
@@ -105,9 +106,8 @@ To enable an interface:
 
 1. Edit the board DTS under `kernel/arch/arm64/boot/dts/rockchip/` in the SDK:
    enable the controller node and select the pin muxing via `pinctrl-0`;
-2. Rebuild the dtb (`make dtbs` in the SDK);
-3. Replace the matching file under `/boot/dtb/rockchip/` with the new dtb and
-   reboot.
+2. Rebuild the kernel (`./build.sh kernel` in the SDK);
+3. Flash the new `boot.img` (see [Flashing](/flashing)) and reboot.
 
 The interface pages name the node and pin-mux variant for each controller
 (governed by the same rule: only one pin-mux variant per controller, e.g.
@@ -122,11 +122,11 @@ Two routes:
 sudo dpkg -i linux-image-*.deb linux-headers-*.deb
 sudo reboot
 
-# 2. directly from the source tree, replacing the files on the boot partition
-./build.sh kernel      # on the build host, then copy extboot.img / dtb to the board
+# 2. directly from the source tree, reflashing the boot image
+./build.sh kernel      # on the build host, then flash the new boot.img
 ```
 
-Keep the previous kernel and `rk-kernel.dtb` on a backup partition or SD card
+Keep the previous `boot.img` on a backup partition or SD card
 before upgrading — the serial console is the only recovery path if the new
 kernel does not reach userspace.
 
@@ -138,8 +138,9 @@ df -h                # free space per filesystem
 ```
 
 The root filesystem is expanded to the full media size on first boot. `/var/log`
-is a zram device in the default image, so logs do not wear the eMMC but are lost
-on reboot; mount a real partition there for long-running deployments.
+lives on the root filesystem (no zram), so verbose logging wears the eMMC over
+time; point it at a dedicated partition (e.g. `/userdata`) for long-running
+deployments.
 
 ## Accelerators
 

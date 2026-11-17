@@ -21,11 +21,8 @@ Most are portable archives — unzip and run, no installer.
 | Tool | Executable | Purpose |
 |---|---|---|
 | RK Driver Assistant | `DriverInstall.exe` | USB driver for Maskrom / Loader mode. Uninstall the old driver first |
-| RKDevTool | `RKDevTool.exe` | Flash `update.img` to eMMC, flash single partitions, erase SPI NOR |
-| SDDiskTool | `SD_Firmware_Tool.exe` | Write a Rockchip image to a microSD card in *SD Boot* mode |
-| SDCardFormatter | `SDCardFormatterv5_WinEN.exe` | Restore a card that flashing tools no longer detect |
+| RKDevTool | `RKDevTool.exe` | Flash `update.img` to eMMC, flash single partitions |
 | FactoryTool | `FactoryTool.exe` | Batch flashing for production |
-| SN / MAC writer | vendor tool | Write serial number and MAC address in the vendor partition |
 | CH340 driver | `CH341SER.EXE` | USB-to-serial adapter used for the debug console |
 | MobaXterm | portable | Serial console and SSH client in one window |
 
@@ -63,14 +60,6 @@ not in flashing mode or the USB cable carries no data.
 
 Flashing requires **two** connections: the USB A-to-A cable from the PC to a
 USB 3.0 port for data, and the Type-C supply into **PWR IN** for power.
-
-## Erase SPI NOR (last resort)
-
-Leftover boot data in SPI flash can stop a new image from starting:
-
-1. In RKDevTool open **Advanced**, load `MiniLoaderAll.bin`, click **Download**.
-2. Select storage **SPINOR**, click **Switch Storage**, then **Erase All**.
-3. Power-cycle into Maskrom and flash `update.img` again.
 
 ## Which tool for which image
 

@@ -15,11 +15,12 @@ slug: "/r5a-uart"
 | UART | 排针引脚 | 设备节点 | 默认镜像状态 | 启用方式 |
 |---|---|---|---|---|
 | UART2 | 8（TX）/ 10（RX） | `ttyFIQ0` | 调试串口，常开 | — |
-| UART6（M1） | 16（TX）/ 18（RX） | `/dev/ttyS2` | 已启用 | — |
-| UART0（M2） | 29（TX）/ 31（RX） | 用 `dmesg` 确认 | 关闭 | 需改设备树（见下文） |
-| UART3（M2） | 33（TX）/ 35（RX） | 用 `dmesg` 确认 | 关闭 | 需改设备树（见下文） |
+| UART6（M1） | 16（TX）/ 18（RX） | `/dev/ttyS6` | 已启用 | — |
+| UART0（M2） | 29（TX）/ 31（RX） | 启用后为 `/dev/ttyS0` | 关闭 | 需改设备树（见下文） |
+| UART3（M2） | 33（TX）/ 35（RX） | 启用后为 `/dev/ttyS3` | 关闭 | 需改设备树（见下文） |
 
 串口参数：**1500000 波特率、8N1、无流控**，3.3 V TTL 电平。
+设备节点编号是确定的，并非「由 dmesg 决定」：设备树带有 `serialN` 别名，`&uartN` 一定呈现为 `/dev/ttySN`（`serial6 = serial@feb90000` → `/dev/ttyS6`，`serial9 = serial@febc0000` → `/dev/ttyS9`）。默认镜像只注册三个串口节点：`/dev/ttyFIQ0`（调试口，即 UART2）、`/dev/ttyS6` 与 `/dev/ttyS9`。
 
 更多 UART 可通过修改设备树引到排针：UART4（TX 23 / RX 19，M2）、UART7（TX 26 /
 RX 24，M2，CTS 在 40）与 UART8（TX 27 / RX 28，M0，RTS/CTS 在 36/38）；

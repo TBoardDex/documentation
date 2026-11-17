@@ -37,8 +37,8 @@ Windows 下用 PuTTY / MobaXterm，参数相同。没有显示器时，串口可
 ## 通用 UART
 
 大多数板卡上通用 UART **默认关闭**，需在设备树（DTS）中启用：修改 SDK 中的板级
-DTS，打开对应 uart 节点并通过 `pinctrl-0` 选择引脚复用，`make dtbs` 编译后替换
-`/boot/dtb/rockchip/` 下的 dtb 并重启（见 [Linux](/linux#设备树)）。
+DTS，打开对应 uart 节点并通过 `pinctrl-0` 选择引脚复用，`./build.sh kernel`
+重新编译内核，烧写新的 `boot.img` 并重启（见 [Linux](/linux#设备树)）。
 
 设备节点编号由板级设备树的 `aliases` 决定，请实际确认而不是猜：
 

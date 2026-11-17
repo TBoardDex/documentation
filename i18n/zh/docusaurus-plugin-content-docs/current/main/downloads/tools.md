@@ -20,11 +20,8 @@ slug: "/tools"
 | 工具 | 可执行文件 | 用途 |
 |---|---|---|
 | RK Driver Assistant | `DriverInstall.exe` | Maskrom / Loader 模式的 USB 驱动，重装前先卸载旧驱动 |
-| RKDevTool | `RKDevTool.exe` | 烧录 `update.img` 到 eMMC、烧录单分区、擦除 SPI NOR |
-| SDDiskTool | `SD_Firmware_Tool.exe` | 以 *SD Boot* 模式把瑞芯微镜像写入 microSD |
-| SDCardFormatter | `SDCardFormatterv5_WinEN.exe` | 修复烧录工具已无法识别的存储卡 |
+| RKDevTool | `RKDevTool.exe` | 烧录 `update.img` 到 eMMC、烧录单分区 |
 | FactoryTool | `FactoryTool.exe` | 量产批量烧录 |
-| SN / MAC 写入工具 | 厂商工具 | 在 vendor 分区写入序列号与 MAC |
 | CH340 驱动 | `CH341SER.EXE` | 调试串口常用的 USB 转串口芯片 |
 | MobaXterm | 免安装 | 串口终端与 SSH 客户端二合一 |
 
@@ -61,14 +58,6 @@ sudo ./upgrade_tool uf update.img -noreset # 烧录后保持在 Loader 模式
 
 烧录需要**两路**连接：PC 到 USB 3.0 口的 USB A-to-A 数据线，以及接入
 **PWR IN** 的 Type-C 电源。
-
-## 擦除 SPI NOR（最后手段）
-
-SPI flash 中残留的启动数据会导致新镜像起不来：
-
-1. 在 RKDevTool 打开 **Advanced**，加载 `MiniLoaderAll.bin`，点击 **Download**。
-2. 存储选择 **SPINOR**，点击 **Switch Storage**，再点 **Erase All**。
-3. 重新上电进入 Maskrom，再次烧录 `update.img`。
 
 ## 镜像与工具的对应关系
 

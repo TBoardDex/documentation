@@ -71,8 +71,8 @@ exact file is board-specific):
    and pixel format;
 3. If the panel logic power or backlight is supplied by the board, check the
    matching regulator and backlight nodes;
-4. Rebuild the dtb (`make dtbs` in the SDK), replace the file under
-   `/boot/dtb/rockchip/`, and reboot.
+4. Rebuild the kernel (`./build.sh kernel` in the SDK), flash the new
+   `boot.img` — the rebuilt device tree is packed inside — and reboot.
 
 Mismatched timing or initialization shows up as a lit but black screen or a
 rolling image — compare the DTS timing values against the panel datasheet.
